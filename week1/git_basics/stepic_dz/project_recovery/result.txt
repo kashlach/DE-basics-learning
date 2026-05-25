@@ -1,0 +1,80 @@
+Mi@DESKTOP-PO83F21 MINGW64 ~/DE_learning/week1/git_basics/stepic_dz/project_recovery (master)
+$ git log --oneline
+4ab85ff (HEAD -> master) Add .gitignore
+db3fc65 Recovery: restored working config from backup
+c39e8c3 Initial: damaged config from Koschey
+044befe Add some new info to git_brief
+32ff777 Revert "update test_file"
+ff3adbd update test_file
+24910b7 add new line to test file
+5a8c8ac add reset info
+3e29943 add status info
+70f88f4 add new_file_test.txt, change git_brief.txt
+6396d89 add git_brief.txt
+
+Mi@DESKTOP-PO83F21 MINGW64 ~/DE_learning/week1/git_basics/stepic_dz/project_recovery (master)
+$ history -30
+bash: history: -3: invalid option
+history: usage: history [-c] [-d offset] [n] or history -anrw [filename] or history -ps arg [arg...]
+
+Mi@DESKTOP-PO83F21 MINGW64 ~/DE_learning/week1/git_basics/stepic_dz/project_recovery (master)
+$ history 31
+  144  # git config user.email "user1@email.com"
+  145  cd project_recovery/
+  146  # git init
+  147  # git config user.name "user1"
+  148  # git config user.email "user1@email.com"
+  149  mv /c/Users/Mi/Downloads/app-config.json .
+  150  ls
+  151  git add .
+  152  git commit -m "Initial: damaged config from Koschey"
+  153  git rm app-config.json
+  154  cp /c/Users/Mi/Downloads/backup-config.json .
+  155  ls
+  156  mv backup-config.json app_config.json
+  157  git status
+  158  git add .
+  159  ls
+  160  cat app_config.json
+  161  git commit -m "Recovery: restored working config from backup"
+  162  diff HEAD HEAD~1
+  163  git diff HEAD HEAD~1
+  164  git log --oneline
+  165  git reset --hard HEAD^
+  166  cat app-config.json
+  167  git reset --hard db3fc65
+  168  cat app_config.json
+  169  nano .gitignore
+  170  git add .gitignore
+  171  git commit -m "Add .gitignore"
+  172  git log --oneline
+  173  history -30
+  174  history 31
+
+Mi@DESKTOP-PO83F21 MINGW64 ~/DE_learning/week1/git_basics/stepic_dz/project_recovery (master)
+$ cat app_config.json
+{
+  "app_name": "Три Топора",
+  "status": "working",
+  "database": "connected",
+  "payments": true,
+  "magic": {
+    "rivers": "normal",
+    "clouds": "up",
+    "battery": "all_day_long"
+  }
+}
+Mi@DESKTOP-PO83F21 MINGW64 ~/DE_learning/week1/git_basics/stepic_dz/project_recovery (master)
+$ cat .gitignore
+# Временные файлы системы
+*.tmp
+
+# Файлы логов (много места, не нужны в репозитории)
+*.log
+
+# Конфигурационные файлы с секретами и паролями
+secret-*
+
+# Личные файлы Кощея - чтобы больше не портил наш код!
+koschey-*
+
