@@ -1,0 +1,11 @@
+{
+  "app_name": "Три Топора",
+  "status": "broken",
+  "database": "disconnected",
+  "payments": false,
+  "magic": {
+    "rivers": "backwards",
+    "clouds": "down",
+    "battery": "5_minutes"
+  }
+}
