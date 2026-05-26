@@ -1,0 +1,27 @@
+# Виртуальное окружение
+venv/
+env/
+.env/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+
+# Файлы VS Code
+.vscode/
+*.code-workspace
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.bak
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+EOF
+
