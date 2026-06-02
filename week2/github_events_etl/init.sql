@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS github_events (
 );
 
 CREATE TABLE IF NOT EXISTS github_events_raw (
-    event_id VARCHAR(30) PRIMARY KEY REFERENCES github_events(event_id),
+    event_id VARCHAR(30) PRIMARY KEY,
     raw_json JSONB NOT NULL
 );
 
