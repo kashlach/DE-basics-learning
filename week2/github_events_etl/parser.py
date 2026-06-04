@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/github_events_db')
 
-url = 'https://api.github.com/events'
+url = 'https://api.github.com/events?per_page=100'
 headers = {'Accept': 'application/vnd.github.v3+json'}
 
 response = requests.get(url, headers=headers)
@@ -81,7 +81,6 @@ with engine.connect() as conn:
         FROM github_events
         GROUP BY type
         ORDER BY event_cnt DESC
-        LIMIT 5
     '''))
     for row in result:
         print(f'{row[0]}: {row[1]} событий')
