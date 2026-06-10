@@ -19,6 +19,7 @@ __pycache__/
 *.log
 *.tmp
 *.bak
+logs/
 
 # Системные файлы
 .DS_Store
