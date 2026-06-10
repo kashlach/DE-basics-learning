@@ -1,7 +1,6 @@
 ## Airflow DAG для автоматизации загрузки GitHub Events
 
 ## Цель
-
 Знакомство с Apache Airflow на практике: разработка DAG для автоматического запуска парсера GitHub API.
 
 * Автоматический запуск скрипта каждые 5 минут
@@ -10,6 +9,7 @@
 * Ограничение по количеству запусков
 
 ## Структура проекта
+```text
 airflow_dags/
 ├── dags/
 │ ├── autoparse_github_events.py # DAG для автозапуска парсера
@@ -19,6 +19,7 @@ airflow_dags/
 ├── screenshots/
 ├── docker-compose.yml           # Конфигурация Airflow + PostgreSQL + pgAdmin
 └── README.md
+```
 
 #### Технологии
 * Apache Airflow (v2.9.3) — оркестрация
@@ -38,10 +39,12 @@ airflow_dags/
 |Variables|	Хранение счётчика запусков|
 |DummyOperator|	Точка объединения веток|
 
-##№ Схема DAG
+### Схема DAG
+```text
 init_log_table → check_exec_limit
 ├── get_initial_count → run_parser → verify → log → end
 └────────────────────────────────────────────→ end
+```
 
 #### Статусы тасков (последние 100 запусков)
 ![Статусы тасков](screenshots/dag_runs.png)
