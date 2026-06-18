@@ -1,14 +1,27 @@
 ## Airflow DAG для автоматизации загрузки GitHub Events
 
-## Цель
-Знакомство с Apache Airflow на практике: разработка DAG для автоматического запуска парсера GitHub API.
+Периодический сбор данных по [GitHub Events API](https://api.github.com/events) с помощью скрипта из предыдущего проекта. DAG автоматически запускает парсер каждые 5 минут и логирует запуски в БД.
 
-* Автоматический запуск скрипта каждые 5 минут
-* Проверка, что данные действительно загрузились
-* Логирование запусков в БД
-* Ограничение по количеству запусков
 
-## Структура проекта
+### Цель
+
+Знакомство с Apache Airflow для оркестрации задач на практике.
+
+
+**Что нового было освоено в рамках проекта**
+
+* Контейнеризация с помощью Docker Compose
+* Взаимодействие с PostgreSQL через `PostgresHook` (метабаза Airflow и целевая БД)
+* Разработка DAG в Airflow с расписанием
+* Использование `PythonOperator`, `BashOperator` и `BranchPythonOperator`
+* Обмен данными между задачами через XCom
+* Использование `Variables` (счётчик запусков)
+* Мониторинг выполнения тасков через Web UI Airflow
+* Работа с pgAdmin
+
+
+### Структура проекта
+
 ```text
 airflow_dags/
 ├── dags/
@@ -21,38 +34,28 @@ airflow_dags/
 └── README.md
 ```
 
-#### Технологии
-* Apache Airflow (v2.9.3) — оркестрация
-* PostgreSQL — метабаза Airflow и целевая БД
-* pgAdmin — визуальное управление БД
-* Docker & Docker Compose — контейнеризация
+---
 
-#### Концепции Airflow, применённые в проекте
-|Концепция|Где используется|
-|---------|----------------|
-|DAG|	Определение workflow|
-|PythonOperator|	Выполнение Python-функций|
-|BashOperator|	Запуск внешнего скрипта|
-|BranchPythonOperator|	Ветвление при достижении лимита|
-|PostgresHook|	Подключение к БД|
-|XCom|	Передача данных между тасками|
-|Variables|	Хранение счётчика запусков|
-|DummyOperator|	Точка объединения веток|
+##### Схема DAG
 
-### Схема DAG
 ```text
 init_log_table → check_exec_limit
 ├── get_initial_count → run_parser → verify → log → end
 └────────────────────────────────────────────→ end
 ```
 
-#### Статусы тасков (последние 100 запусков)
+##### Статусы тасков (последние 100 запусков)
+
 ![Статусы тасков](screenshots/dag_runs.png)
 
-#### Таблица логов в pgAdmin
+
+##### Таблица логов в pgAdmin
+
 ![Таблица логов](screenshots/dag_logs.png)
 
-### Ключевые моменты из кода
+
+##### Ключевые моменты из кода
+
 ```python
 # Проверка лимита запусков с ветвлением
 def check_exec_limit(**context):
@@ -67,7 +70,7 @@ def check_exec_limit(**context):
     Variable.set(var_name, current_runs + 1)
     return 'get_initial_count' #продолжаем
 
-# Проверка, что данные появились
+# Проверка, что данные были загружены
 def check_data_arrived(**context):
     hook = PostgresHook(postgres_conn_id='github_events_db')
     
