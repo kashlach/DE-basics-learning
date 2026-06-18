@@ -1,4 +1,4 @@
-from airflow.providers.postgres.hook.postgres import PostgresHook
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
@@ -26,7 +26,7 @@ create_sql = '''
         _loaded_at_ TIMESTAMP DEFAULT NOW(),
         _ddl_code_ VARCHAR(1) DEFAULT 'I');
         
-    CREATE TABLE IF NOT EXISTS metadata (
+    CREATE TABLE IF NOT EXISTS scd2.metadata (
         table_name VARCHAR(100) PRIMARY KEY,
         last_loaded_at TIMESTAMP,
         max_source_ts TIMESTAMP);
@@ -91,7 +91,7 @@ def load_staging(**context):
     
     # определяем дату, с которой будем искать изменения на источнике
     result = hook.get_first(
-        "SELECT max_source_ts FROM scd2.metadata WHERE table_name = %s", 
+        "SELECT max_source_ts, last_loaded_at FROM scd2.metadata WHERE table_name = %s", 
         (table_name, )
     )
     
@@ -99,9 +99,15 @@ def load_staging(**context):
         max_ts = result[0]
         logging.info(f"Загружаем изменения с {max_ts}")
     else:
-    # если данных в metadata нет, то первая загрузка => загружаем все
-        max_ts = datetime(1900, 1, 1)
-        logging.info("Первая загрузка, загружаем все")
+    # если данных в metadata нет, то
+    # первая загрузка => загружаем все
+    # или некорректная работа
+        if not result[1]:
+            max_ts = datetime(1900, 1, 1)
+            logging.info("Первая загрузка, загружаем все")
+        else:
+            logging.error("Отсутствует max_source_ts в metadata!")
+            return
         
     load_date = datetime.now()
     logging.info(f"Начало загрузки: {load_date}")
@@ -109,21 +115,21 @@ def load_staging(**context):
     # загружаем измененные данные в staging
     try:
         hook.run(merge_staging, parameters=(max_ts, load_date, load_date, load_date, load_date, load_date))
-            logging.info("merge в staging выполнен")
+        logging.info("merge в staging выполнен")
     except Exception as e:
         logging.error(f"merge не выполнен: {e}")    
         raise
     
-    # выбираем source_updated_at из загруженных записей
+    # выбираем source_updated_at из загруженных за последний час записей
     result = hook.get_first(
-        "SELECT MAX(source_updated_at) FROM scd2.customers_staging WHERE _loaded_at_ = %s", 
-        (load_date, )
+        "SELECT MAX(source_updated_at) FROM scd2.customers_staging WHERE _loaded_at_ > %s", 
+        ((datetime.now() - timedelta(hours=1)), ) #(load_date, )
     )
-    max_source_ts = result[0] if result else max_ts
+    max_source_ts = result[0] if result and result[0] else max_ts
     
     # обновляем metadata
     try:
-        hook.run(metadata_upd, table_name, load_date, max_source_ts)
+        hook.run(metadata_upd, parameters=(table_name, load_date, max_source_ts))
         logging.info(f"metadata обновлена: max_source_ts = {max_source_ts}")
     except Exception as e:
         logging.error(f"Ошибка при обновлении metadata: {e}")
@@ -154,7 +160,7 @@ def check_staging_state():
 
     watermark = hook.get_first(
         "SELECT last_loaded_at, max_source_ts FROM scd2.metadata WHERE table_name = %s", 
-        'customers_staging'
+        ("'customers_staging'", )
     )
     
     if watermark:
