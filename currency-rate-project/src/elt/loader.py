@@ -7,7 +7,7 @@ import logging
 
 from sqlalchemy import create_engine, text
 
-from src.elt.config import DATABASE_URL
+from .config import DATABASE_URL
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,6 @@ def ensure_tables() -> None:
 
     with engine.connect() as conn:
         conn.execute(text(create_sql))
-        conn.commit()
 
     logger.info("Таблица готова")
 
@@ -83,11 +82,10 @@ def upsert_data(request_date, raw_json) -> str:
             else:
                 upd_sql = text(f"""
                     UPDATE {table_name}
-                    SET raw_json = :j::jsonb, loaded_at = NOW()
+                    SET raw_json = CAST(:j AS JSONB), loaded_at = NOW()
                     WHERE request_date = :d
                 """)
             conn.execute(upd_sql, {"j": json_str, "d": date_str})
-            conn.commit()
             logger.info(f"Обновили {date_str}")
             return 'updated'
         else:
@@ -96,7 +94,6 @@ def upsert_data(request_date, raw_json) -> str:
                 VALUES (:d, :j)
             """)
             conn.execute(ins_sql, {"d": date_str, "j": json_str})
-            conn.commit()
             logger.info(f"Добавили {date_str}")
             return 'inserted'
 
@@ -105,7 +102,7 @@ def load_date(target_date) -> str:
     Сохраняет ответ из API.
     Возвращает "inserted", "updated" или "skipped"
     '''
-    from src.elt.api_client import fetch_rates
+    from .api_client import fetch_rates
 
     api_resp = fetch_rates(target_date)
     if api_resp is None:

@@ -1,0 +1,2 @@
+ALTER USER currency_user CREATEDB;
+CREATE DATABASE airflow;

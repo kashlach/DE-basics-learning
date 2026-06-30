@@ -7,7 +7,7 @@ import logging
 import sys
 from datetime import date, datetime
 
-from src.elt.loader import count_records, load_date
+from .loader import count_records, load_date
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 

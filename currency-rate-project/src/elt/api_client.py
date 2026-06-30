@@ -6,8 +6,8 @@ import time
 
 import requests
 
-from src.elt.config import CBR_API_URL, MAX_RETRIES
-from src.elt.xml_converter import xml_to_json
+from .config import CBR_API_URL, MAX_RETRIES
+from .xml_converter import xml_to_json
 
 # логгер с именем, равным полному пути к текущему файлу, для понимания, из какого модуля сообщения
 logger = logging.getLogger(__name__)

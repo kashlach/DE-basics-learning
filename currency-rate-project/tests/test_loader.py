@@ -1,12 +1,12 @@
 '''
 Тесты для loader
 '''
-from src.elt.loader import count_records, ensure_tables, get_engine, upsert_data
+from .loader import count_records, ensure_tables, get_engine, upsert_data
 
 
 def clean_db():
     '''Очистка БД перед каждым тестом'''
-    import src.elt.loader as loader
+    import .loader as loader
     loader._engine = None
     loader.DATABASE_URL = 'sqlite://'
     get_engine()

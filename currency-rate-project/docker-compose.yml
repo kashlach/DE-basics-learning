@@ -1,0 +1,88 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: cur_postgres
+    environment:
+      POSTGRES_USER: currency_user
+      POSTGRES_PASSWORD: currency_pass
+      POSTGRES_DB: currency_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - currency_pgdata:/var/lib/postgresql/data
+      - ./sql/init_airflow_db.sql:/docker-entrypoint-initdb.d/init_airflow_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U currency_user -d currency_db"]
+      interval: 5s
+      retries: 5
+
+  airflow-webserver:
+    image: apache/airflow:2.9.3
+    container_name: cur_airflow_webserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://currency_user:currency_pass@postgres/airflow
+      DATABASE_URL: postgresql://currency_user:currency_pass@postgres/currency_db
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__WEBSERVER__RBAC: "False"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False" 
+    volumes:
+      - ./src:/opt/airflow/src
+      - ./currency_dbt:/opt/airflow/currency_dbt
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+    command: >
+      bash -c "
+      airflow db migrate &&
+      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
+      airflow webserver
+      "
+    restart: unless-stopped
+
+  airflow-scheduler:
+    image: apache/airflow:2.9.3
+    container_name: cur_airflow_scheduler
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://currency_user:currency_pass@postgres/airflow
+      DATABASE_URL: postgresql://currency_user:currency_pass@postgres/currency_db
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    volumes:
+      - ./src:/opt/airflow/src
+      - ./currency_dbt:/opt/airflow/currency_dbt
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+    command: scheduler
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cur_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cur_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+
+volumes:
+  currency_pgdata:
+  grafana_data:

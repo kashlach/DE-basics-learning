@@ -12,7 +12,7 @@ from elt.loader import count_records, ensure_tables, get_engine, load_date
 
 
 def ensure_raw_schema():
-    get_engine(DATABASE_URL)
+    get_engine()
     ensure_tables()
 
 def extract_and_load(**context):
@@ -37,7 +37,7 @@ def_args = {
 with DAG(
     'currency_pipeline',
     default_args=def_args,
-    description='Инкрементальная загрузка staging для customers',
+    description='Ежедневная загрузка курсов валют ЦБ РФ',
     schedule='0 10 * * *', # в 10 по МСК
     catchup=False,
     max_active_runs=1,
