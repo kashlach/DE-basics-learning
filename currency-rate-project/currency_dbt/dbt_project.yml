@@ -1,0 +1,26 @@
+name: 'currency_dbt'
+version: '1.0.0'
+config-version: 2
+
+profile: 'currency_dbt'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  currency_dbt:
+    staging:
+      +materialized: view
+      +schema: stg
+    intermediate:
+      +materialized: table
+      +schema: int
+    marts:
+      +materialized: table
+      +schema: marts

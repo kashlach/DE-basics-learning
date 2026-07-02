@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: dm_weekly_report
+    description: "Витрина для еженедельного отчета"
+    columns:
+      - name: requested_date
+        description: '{{ doc("requested_date") }}'
+      - name: char_code
+        description: '{{ doc("char_code") }}'
+      - name: currency_name
+        description: '{{ doc("currency_name") }}'
+      - name: rate
+        description: '{{ doc("rate") }}'
+      - name: prev_date_rate
+        description: '{{ doc("prev_date_rate") }}'    
+      - name: daily_change_pct
+        description: '{{ doc("daily_change_pct") }}'
+      - name: avg_rate_7d
+        description: '{{ doc("avg_rate_7d") }}'
+      - name: week_min_rate
+        description: "Минимальный курс за 7 дней"
+      - name: week_max_rate
+        description: "Максимальный курс за 7 дней"
+  
+  - name: dm_change_alerts
+    description: "Витрина для алертов по величине изменения курса (>2%)"
+    columns:
+      - name: requested_date
+        description: '{{ doc("requested_date") }}'
+      - name: current_rate
+        description: '{{ doc("rate") }}'
+      - name: prev_date_rate
+        description: '{{ doc("prev_date_rate") }}'
+      - name: daily_change_pct
+        description: '{{ doc("daily_change_pct") }}'
+      - name: alert_triggered
+        description: "Изменение курса в процентах"
+        tests:
+          - not_null
+

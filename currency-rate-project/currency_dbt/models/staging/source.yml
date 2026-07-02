@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Сырые данные из API ЦБ РФ"
+    schema: raw
+    tables:
+      - name: currency_rates_raw
+        description: "Ответ API ЦБ РФ с курсами валют в JSON"
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: request_date
+            description: "Дата, за которую запросили курсы"
+            tests:
+              - unique
+              - not_null
+          - name: raw_json
+            description: "Ответ API"
+            tests:
+              - not_null

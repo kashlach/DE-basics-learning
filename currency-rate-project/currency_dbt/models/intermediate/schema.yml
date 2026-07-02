@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: int_daily_rates
+    description: "Курсы валют из JSON в виде плоской таблицы"
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "ABS(daily_change_pct) < 50"
+    columns:
+      - name: requested_date
+        description: '{{ doc("requested_date") }}'
+
+      - name: received_date
+        description: '{{ doc("received_date") }}'
+
+      - name: char_code
+        description: '{{ doc("char_code") }}'
+
+      - name: nominal
+        description: '{{ doc("nominal") }}'
+    
+      - name: currency_name
+        description: '{{ doc("currency_name") }}'  
+   
+      - name: value
+        description: '{{ doc("value") }}'
+    
+      - name: rate
+        description: '{{ doc("rate") }}'
+  
+      - name: prev_date_rate
+        description: '{{ doc("prev_date_rate") }}'
+    
+      - name: daily_change_pct
+        description: '{{ doc("daily_change_pct") }}'
+ 
+      - name: avg_rate_7d
+        description: '{{ doc("avg_rate_7d") }}'

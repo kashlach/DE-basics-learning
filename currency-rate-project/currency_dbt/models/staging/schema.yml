@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_currency_rates
+    description: "Курсы валют из JSON в виде плоской таблицы"
+    columns: 
+      - name: requested_date
+        description: '{{ doc("requested_date") }}'
+        tests:
+          - not_null
+  
+      - name: received_date
+        description: '{{ doc("received_date") }}'
+        tests:
+          - not_null
+
+      - name: char_code
+        description: '{{ doc("char_code") }}'
+        tests:
+          - not_null
+
+      - name: nominal
+        description: '{{ doc("nominal") }}'
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                inclusive: true
+
+      - name: currency_name
+        description: '{{ doc("currency_name") }}'
+        tests:
+          - not_null
+
+      - name: value
+        description: '{{ doc("value") }}'
+        tests:
+          - not_null
+
+      - name: rate
+        description: '{{ doc("rate") }}'
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0.0001
+                max_value: 2000
