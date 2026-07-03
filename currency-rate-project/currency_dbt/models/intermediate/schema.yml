@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: int_daily_rates
-    description: "Курсы валют из JSON в виде плоской таблицы"
+    description: "Курсы валют с аналитическими метриками"
     tests:
       - dbt_utils.expression_is_true:
           arguments:

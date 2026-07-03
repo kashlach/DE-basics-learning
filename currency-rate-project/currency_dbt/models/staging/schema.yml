@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_currency_rates
-    description: "Курсы валют из JSON в виде плоской таблицы"
+    description: "Курсы валют из JSON в виде таблицы"
     columns: 
       - name: requested_date
         description: '{{ doc("requested_date") }}'

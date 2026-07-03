@@ -17,7 +17,7 @@ services:
       retries: 5
 
   airflow-webserver:
-    image: apache/airflow:2.9.3
+    image: my-airflow-with-dbt
     container_name: cur_airflow_webserver
     ports:
       - "8080:8080"
@@ -32,11 +32,11 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "False" 
     volumes:
       - ./src:/opt/airflow/src
-      - ./currency_dbt:/opt/airflow/currency_dbt
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
+      - ./currency_dbt:/opt/airflow/currency_dbt
     command: >
-      bash -c "
+      bash -c "cd /opt/airflow/currency_dbt && dbt deps &&
       airflow db migrate &&
       airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
       airflow webserver
@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
 
   airflow-scheduler:
-    image: apache/airflow:2.9.3
+    image: my-airflow-with-dbt
     container_name: cur_airflow_scheduler
     depends_on:
       postgres:
@@ -53,12 +53,16 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://currency_user:currency_pass@postgres/airflow
       DATABASE_URL: postgresql://currency_user:currency_pass@postgres/currency_db
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      DBT_PROFILES_DIR: /opt/airflow/currency_dbt
     volumes:
       - ./src:/opt/airflow/src
-      - ./currency_dbt:/opt/airflow/currency_dbt
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
-    command: scheduler
+      - ./currency_dbt:/opt/airflow/currency_dbt
+    command: >
+      bash -c "cd /opt/airflow/currency_dbt && dbt deps &&
+      airflow scheduler
+      "
     restart: unless-stopped
 
   grafana:

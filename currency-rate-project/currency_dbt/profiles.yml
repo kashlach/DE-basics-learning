@@ -1,0 +1,23 @@
+currency_dbt:  
+  outputs:
+    dev:
+      type: postgres
+      threads: 1
+      host: localhost
+      port: 5432
+      user: currency_user
+      password: currency_pass
+      dbname: currency_db
+      schema: dev_finance
+    
+    prod:
+      type: postgres
+      threads: 4
+      host: postgres
+      port: 5432
+      user: currency_user
+      password: currency_pass
+      dbname: currency_db
+      schema: finance
+      
+  target: dev

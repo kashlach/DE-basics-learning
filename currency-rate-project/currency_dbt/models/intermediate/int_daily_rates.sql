@@ -1,5 +1,4 @@
 /*
-Данные за 7 последних дней, добавляем агрегаты:
  - Курс за предыдущий день prev_date_rate
  - Изменение курса по сравнению с вчерашним в процентах daily_change_pct
  - Скользящее среднее за 7 дней avg_rate_7d
@@ -29,7 +28,7 @@ END AS daily_change_pct,
 ROUND(
   AVG(rate) OVER(
 	PARTITION BY char_code
-	ORDER BY requested_date
+	ORDER BY requested_date DESC
 	ROWS BETWEEN CURRENT ROW AND 6 FOLLOWING
   ),
 4)	AS avg_rate_7d
