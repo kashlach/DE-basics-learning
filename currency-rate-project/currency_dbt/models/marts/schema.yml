@@ -26,6 +26,8 @@ models:
   - name: dm_change_alerts
     description: "Витрина для алертов по величине изменения курса (>2%)"
     columns:
+      - name: char_code
+        description: '{{ doc("char_code") }}'
       - name: requested_date
         description: '{{ doc("requested_date") }}'
       - name: current_rate
