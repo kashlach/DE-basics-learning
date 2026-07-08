@@ -3,16 +3,16 @@ services:
     image: postgres:15
     container_name: cur_postgres
     environment:
-      POSTGRES_USER: currency_user
-      POSTGRES_PASSWORD: currency_pass
-      POSTGRES_DB: currency_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PWD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - currency_pgdata:/var/lib/postgresql/data
       - ./sql/init_airflow_db.sql:/docker-entrypoint-initdb.d/init_airflow_db.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U currency_user -d currency_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       retries: 5
 
@@ -25,11 +25,25 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://currency_user:currency_pass@postgres/airflow
-      DATABASE_URL: postgresql://currency_user:currency_pass@postgres/currency_db
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://${DB_USER}:${DB_PWD}@postgres/airflow
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PWD}@postgres/${DB_NAME}
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__WEBSERVER__RBAC: "False"
-      AIRFLOW__CORE__LOAD_EXAMPLES: "False" 
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      # переменные для SMTP
+      # перенастроено через Connections
+      # AIRFLOW__SMTP__SMTP_HOST: smtp.yandex.ru
+      # AIRFLOW__SMTP__SMTP_PORT: 465
+      # AIRFLOW__SMTP__SMTP_SSL: True
+      # AIRFLOW__SMTP__SMTP_USER: ${SMTP_USER}
+      # AIRFLOW__SMTP__SMTP_PASSWORD: ${SMTP_PWD}
+      # AIRFLOW__SMTP__SMTP_MAIL_FROM: ${SMTP_USER}
+      REPORT_MAIL_TO: ${MAIL_TO}
+      # AIRFLOW__EMAIL__EMAIL_BACKEND: airflow.utils.email.send_email_smtp
+      # переменные для dbt
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PWD}
+      DB_NAME: ${DB_NAME} 
     volumes:
       - ./src:/opt/airflow/src
       - ./airflow/dags:/opt/airflow/dags
@@ -51,10 +65,24 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://currency_user:currency_pass@postgres/airflow
-      DATABASE_URL: postgresql://currency_user:currency_pass@postgres/currency_db
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://${DB_USER}:${DB_PWD}@postgres/airflow
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PWD}@postgres/${DB_NAME}
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      # переменные для SMTP
+      # перенастроено через Connections
+      # AIRFLOW__SMTP__SMTP_HOST: smtp.yandex.ru
+      # AIRFLOW__SMTP__SMTP_PORT: 465
+      # AIRFLOW__SMTP__SMTP_SSL: True
+      # AIRFLOW__SMTP__SMTP_USER: ${SMTP_USER}
+      # AIRFLOW__SMTP__SMTP_PASSWORD: ${SMTP_PWD}
+      # AIRFLOW__SMTP__SMTP_MAIL_FROM: ${SMTP_USER}
+      REPORT_MAIL_TO: ${MAIL_TO}
+      # AIRFLOW__EMAIL__EMAIL_BACKEND: airflow.utils.email.send_email_smtp
+      # переменные для dbt
       DBT_PROFILES_DIR: /opt/airflow/currency_dbt
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PWD}
+      DB_NAME: ${DB_NAME}
     volumes:
       - ./src:/opt/airflow/src
       - ./airflow/dags:/opt/airflow/dags

@@ -2,6 +2,7 @@
 venv/
 env/
 .env/
+.env
 venv.bak/
 
 # Python
@@ -9,6 +10,7 @@ __pycache__/
 *.py[cod]
 *.so
 .Python
+.python_version
 
 
 # Файлы VS Code
@@ -27,4 +29,16 @@ Thumbs.db
 
 # Отладочные файлы
 *test*.*
+!tests/test_api_client.py
+!tests/test_loader.py
+
+# БД для разработки
+*.db
+
+# Airflow
+airflow/logs/
+
+
+.ruff_cache/
+.pytest_cache/
 

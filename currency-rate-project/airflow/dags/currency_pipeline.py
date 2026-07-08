@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 from datetime import datetime, timedelta
 
@@ -11,6 +12,7 @@ sys.path.append('/opt/airflow/src')
 
 from elt.loader import count_records, ensure_tables, get_engine, load_date
 
+email_to = os.getenv("REPORT_MAIL_TO")
 
 def ensure_raw_schema():
     get_engine()
@@ -31,12 +33,15 @@ def form_weekly_rep(**context):
     Эксель отчет с двумя листами: детальная информация и сводный.
     Данные по курсам определенных валют за три месяца.
     Отчет по пн, данные "обновляются" прошедшей неделей.
+    Возвращает путь к файлу, если сформировали отчет.
     '''
-
     #logical_date = datetime.fromisoformat(context['ds'])
     logical_date = context['ds'] # str YYYY-MM-DD
 
-    if datetime.fromisoformat(logical_date).isoweekday() != 1:
+    # при авт запуске logical_date в пн = вс
+    # => чтобы отчет сформ в пн, нужно проверять на вс
+    # при ручном logical_date в пн = пн
+    if datetime.fromisoformat(logical_date).isoweekday() != 7:
         logging.info('Не Пн, отчет не формируем')
         return
 
@@ -69,7 +74,27 @@ def form_weekly_rep(**context):
         df_pivot.to_excel(writer, sheet_name='svod')
         df.to_excel(writer, sheet_name='detailed')
 
-    # TODO: отправка на почту
+    return write_path # будет в xcom таски как return_value
+
+def send_weekly_rep(**context):
+
+    rep_path = context['ti'].xcom_pull(task_ids='form_rep')
+
+    if not rep_path:
+        logging.info('Отсутствует отчет к отправке')
+        return
+
+    from airflow.providers.smtp.hooks.smtp import SmtpHook
+    smtp_hook = SmtpHook(smtp_conn_id='smtp_default')
+
+    logging.info('Отправляем еженедельный отчет')
+    with smtp_hook as hook:
+        hook.send_email_smtp(
+            to=[email_to],
+            subject='Еженедельный отчет по курсам валют',
+            html_content='<p>См. отчет во вложении</p>',
+            files=[rep_path]
+        )
 
 def run_usd_alert(**context):
     from sqlalchemy import text
@@ -90,8 +115,27 @@ def run_usd_alert(**context):
             return
 
         logging.info('Скачок курса USD!')
-        logging.info(f'Был {row[0]}, стал {row[1]} -> изменение на {row[2]} %')
-    # TODO: отправка на почту
+        logging.info(f'Был {row[0]}, стал {row[1]} -> изменение на {row[2]}%')
+
+    # отправка алерта
+    from airflow.providers.smtp.hooks.smtp import SmtpHook
+    smtp_hook = SmtpHook(smtp_conn_id='smtp_default')
+
+    subject = 'Скачок курса USD!'
+    body = f'''
+    <ul>
+        <li><b>Предыдущее значение:</b> {row[0]}</li>
+        <li><b>Текущее значение:</b> {row[1]}</li>
+        <li><b>Изменение:</b> {row[2]}%</li>
+    </ul>
+    '''
+
+    with smtp_hook as hook:
+        hook.send_email_smtp(
+            to=[email_to],
+            subject=subject,
+            html_content=body
+        )
 
 
 def_args = {
@@ -134,8 +178,15 @@ with DAG(
     )
 
     # excel отчеты
-    weekly_rep = PythonOperator(task_id='form_rep', python_callable=form_weekly_rep)
+    form_rep = PythonOperator(task_id='form_rep', python_callable=form_weekly_rep)
     alert = PythonOperator(task_id='usd_alert', python_callable=run_usd_alert)
 
+    send_rep = PythonOperator(
+        task_id='send_rep',
+        python_callable=send_weekly_rep,
+        provide_context=True
+    )
 
-prepare >> load >> check >> dbt_run >> dbt_test >> [weekly_rep, alert]
+
+prepare >> load >> check >> dbt_run >> dbt_test >> [form_rep, alert]
+form_rep >> send_rep
