@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+  - name: 'Currency Dashboards'
+    folder: 'Currency'
+    type: file
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/json

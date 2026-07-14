@@ -24,3 +24,10 @@ models:
     marts:
       +materialized: table
       +schema: marts
+      
+
+vars:
+  grafana_schemas: ['finance_marts', 'finance_int']
+
+on-run-end:
+  - "{% for schema in var('grafana_schemas') %}GRANT SELECT ON ALL TABLES IN SCHEMA {{ schema }} TO grafanareader;{% endfor %}"
