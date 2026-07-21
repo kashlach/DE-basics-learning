@@ -37,15 +37,16 @@ dbt: staging → intermediate → marts
 currency-rate-project/
 ├── airflow/
 │ ├── dags/
-│ │ └── currency_pipeline.py # dag
-│ └── reports/               # еженедельные excel отчеты
-├── currency_dbt/            # dbt проект
+│ │ └── currency_pipeline.py  # dag
+│ └── reports/                # еженедельные excel отчеты
+│   └── svod_auto_report.xlsx # PQ-шаблон для сборки сводного отчета
+├── currency_dbt/             # dbt проект
 │ ├── models/
 │ │ ├── staging/
 │ │ ├── intermediate/
 │ │ └── marts/
 │ ├── dbt_project.yml
-│ ├── packages.yml           # dbt-utils макросы для тестирования данных
+│ ├── packages.yml            # dbt-utils макросы для тестирования данных
 │ └── profiles.yml
 ├── grafana/
 │ └── provisioning/
@@ -53,13 +54,13 @@ currency-rate-project/
 │   │ └── postgres.yaml 
 │   └── dashboards/
 │     ├── dashboards.yml
-│     └── json/             # json дашбордов, автоматически импортируются в графану
+│     └── json/              # json дашбордов, автоматически импортируются в графану
 ├── src/elt/
-│ ├── api_client.py         # запросы курсов с ретраями
-│ ├── xml_converter.py      # xml в json
-│ ├── loader.py             # upsert в БД
-│ ├── config.py             # константы
-│ └── run.py                # ручной запуск для отладки
+│ ├── api_client.py          # запросы курсов с ретраями
+│ ├── xml_converter.py       # xml в json
+│ ├── loader.py              # upsert в БД
+│ ├── config.py              # константы
+│ └── run.py                 # ручной запуск для отладки
 ├── tests/
 │ ├── test_api_client.py
 │ └── test_loader.py
@@ -67,9 +68,9 @@ currency-rate-project/
 │ ├── init_airflow_db.sql
 │ └── init_grafana_user.sql
 ├── screenshots/
-├── Dockerfile              # образ airflow:2.9.3 + dbt-postgres
-├── docker-compose.yml      # postgres, airflow, pgadmin, grafana
-├── pyproject.toml          # зависимости (uv)
+├── Dockerfile               # образ airflow:2.9.3 + dbt-postgres
+├── docker-compose.yml       # postgres, airflow, pgadmin, grafana
+├── pyproject.toml           # зависимости (uv)
 ├── .env.example
 └── README.md
 ```
@@ -115,15 +116,29 @@ docker-compose up -d
 В Airflow включаем DAG currency_pipeline. Он настроен на ежедневное выполнение в 10:00 UTC.
 
 ---
-#####  Отчет и алерт
-1. Еженедельный excel отчет
-Формируется по понедельникам (данные за прошедшую неделю пн-вс).
-Путь: ./airflow/reports/weekly_report_YYYY-MM-DD.xlsx
-Два листа: сводная таблица и детальный (*требует исправления*)
+#####  Отчетность
 
-2. Алерт по USD
-Проверяет изменение >2% за сутки.
-Пишет в лог и отправляет на почту (если настроен SMTP в airflow).
+1. Еженедельный excel отчет
+- Путь: `./airflow/reports/`
+- Имя файла: `weekly_report_YYYY-MM-DD[_manual].xlsx`
+- Режимы запуска:
+  - *Автоматический* (по расписанию): формируется по понедельникам, данные за прошедшую неделю пн-вс, отправляется на почту (если настроен SMTP в airflow)
+  - *Ручной*: формируется в любой день недели, в имя файла добавляется суффикс `_manual`, не отправляется на почту
+
+2. Сводный отчет (через Power Query)
+Содержит таблицу со списком валют и средним значением курса в разрезе номеров недель.
+
+- Путь: `./airflow/reports/`
+- Имя файла: `svod_auto_report.xlsx`
+- Источник данных: автоматически сформированные еженедельные отчеты
+
+3. Алерт по USD
+- Проверяет изменение >2% за сутки
+- Пишет в лог и отправляет уведомление на почту (если настроен SMTP в airflow). Уведомление содержит:
+  - Заголовок с направлением изменения (повышение или снижение)
+  - Предыдущее и текущее значение курса
+  - Изменение в процентах
+
 
 ###### Настройка SMTP через Connection:
 

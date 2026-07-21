@@ -20,7 +20,9 @@ def ensure_raw_schema():
 
 def extract_and_load(**context):
     target_date = datetime.fromisoformat(context['ds'])
-    # context['ds'] - логич. дата, не дата факт. выпол-я, т.е. вчера
+    # context['ds'] - логич. дата, не дата факт. выпол-я
+    # = вчера при автоматич запуске
+    # = сегодня при ручном
     load_date(target_date)
 
 def check_data_loaded():
@@ -30,18 +32,17 @@ def check_data_loaded():
 
 def form_weekly_rep(**context):
     '''
-    Эксель отчет с двумя листами: детальная информация и сводный.
-    Данные по курсам определенных валют за три месяца.
-    Отчет по пн, данные "обновляются" прошедшей неделей.
-    Возвращает путь к файлу, если сформировали отчет.
+    Эксель отчет с данными по курсам определенных валют за неделю.
+    Отчет по пн при запуске по расписанию и в любой день при ручном.
+    Возвращает путь к файлу, если отчет сформирован автоматом.
     '''
-    #logical_date = datetime.fromisoformat(context['ds'])
     logical_date = context['ds'] # str YYYY-MM-DD
+    is_manual = context['dag_run'].external_trigger
 
     # при авт запуске logical_date в пн = вс
     # => чтобы отчет сформ в пн, нужно проверять на вс
     # при ручном logical_date в пн = пн
-    if datetime.fromisoformat(logical_date).isoweekday() != 7:
+    if datetime.fromisoformat(logical_date).isoweekday() != 7 and not is_manual:
         logging.info('Не Пн, отчет не формируем')
         return
 
@@ -53,28 +54,21 @@ def form_weekly_rep(**context):
     df = pd.read_sql(text('''
         SELECT *, EXTRACT(WEEK FROM requested_date) AS week_num
         FROM finance_marts.dm_weekly_report
-        WHERE requested_date >= CAST(:dt AS DATE) - INTERVAL '3' MONTH
-          AND requested_date <= CAST(:dt AS DATE)
         ORDER BY requested_date DESC, char_code ASC
     '''),
-    engine,
-    params={'dt': logical_date})
+    engine)
 
-    df_pivot = pd.pivot_table(
-        df,
-        values=['rate'],
-        index=['char_code'],
-        columns=['week_num'],
-        aggfunc='mean'
-    )
+    if is_manual:
+        rep_name_end = logical_date + '_manual'
+    else:
+        rep_name_end = logical_date
 
     # - ./airflow/reports:/opt/airflow/reports/
-    write_path = f'/opt/airflow/reports/weekly_report_{logical_date}.xlsx'
+    write_path = f'/opt/airflow/reports/weekly_report_{rep_name_end}.xlsx'
     with pd.ExcelWriter(write_path, engine='openpyxl') as writer:
-        df_pivot.to_excel(writer, sheet_name='svod')
         df.to_excel(writer, sheet_name='detailed')
 
-    return write_path # будет в xcom таски как return_value
+    return write_path if not is_manual else None # будет в xcom таски как return_value
 
 def send_weekly_rep(**context):
 
@@ -117,15 +111,18 @@ def run_usd_alert(**context):
         logging.info('Скачок курса USD!')
         logging.info(f'Был {row[0]}, стал {row[1]} -> изменение на {row[2]}%')
 
+        change_dir = 'Повышение' if row[2] >= 0 else 'Снижение'
+
     # отправка алерта
     from airflow.providers.smtp.hooks.smtp import SmtpHook
     smtp_hook = SmtpHook(smtp_conn_id='smtp_default')
 
     subject = 'Скачок курса USD!'
     body = f'''
+    <h1>{change_dir} курса</h1>
     <ul>
-        <li><b>Предыдущее значение:</b> {row[0]}</li>
-        <li><b>Текущее значение:</b> {row[1]}</li>
+        <li><b>Предыдущее значение:</b> {row[1]}</li>
+        <li><b>Текущее значение:</b> {row[0]}</li>
         <li><b>Изменение:</b> {row[2]}%</li>
     </ul>
     '''
@@ -177,14 +174,14 @@ with DAG(
         bash_command='cd /opt/airflow/currency_dbt && dbt test --target prod'
     )
 
-    # excel отчеты
+    # формируем excel отчет и алерт
     form_rep = PythonOperator(task_id='form_rep', python_callable=form_weekly_rep)
     alert = PythonOperator(task_id='usd_alert', python_callable=run_usd_alert)
 
+    # отправляем excel отчет
     send_rep = PythonOperator(
         task_id='send_rep',
-        python_callable=send_weekly_rep,
-        provide_context=True
+        python_callable=send_weekly_rep
     )
 
 
