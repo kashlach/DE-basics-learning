@@ -1,9 +1,15 @@
 apiVersion: 1
 
 providers:
-  - name: 'Currency Dashboards'
-    folder: 'Currency'
+  - name: 'Currency Business Dashboards'
+    folder: 'Currency Business'
     type: file
     editable: true
     options:
-      path: /etc/grafana/provisioning/dashboards/json
+      path: /etc/grafana/provisioning/dashboards/json/business
+  - name: 'Currency Tech Dashboards'
+    folder: 'Currency Tech'
+    type: file
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/json/tech

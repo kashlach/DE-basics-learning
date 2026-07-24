@@ -17,3 +17,19 @@ datasources:
       connMaxLifetime: 14400
       postgresVersion: 1500
       timescaledb: false
+  - name: Airflow Metabase
+    uid: airflow_postgres
+    type: postgres
+    url: postgres:5432
+    user: airflowreader
+    secureJsonData:
+      password: afreader_pass
+    jsonData:
+      database: airflow
+      sslmode: 'disable'
+      maxOpenConns: 100
+      maxIdleConns: 100
+      maxIdleConnsAuto: true
+      connMaxLifetime: 14400
+      postgresVersion: 1500
+      timescaledb: false

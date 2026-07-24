@@ -36,41 +36,51 @@ dbt: staging → intermediate → marts
 ```text
 currency-rate-project/
 ├── airflow/
-│ ├── dags/
-│ │ └── currency_pipeline.py  # dag
-│ └── reports/                # еженедельные excel отчеты
-│   └── svod_auto_report.xlsx # PQ-шаблон для сборки сводного отчета
-├── currency_dbt/             # dbt проект
-│ ├── models/
-│ │ ├── staging/
-│ │ ├── intermediate/
-│ │ └── marts/
-│ ├── dbt_project.yml
-│ ├── packages.yml            # dbt-utils макросы для тестирования данных
-│ └── profiles.yml
-├── grafana/
-│ └── provisioning/
-│   ├── datasources/
-│   │ └── postgres.yaml 
-│   └── dashboards/
-│     ├── dashboards.yml
-│     └── json/              # json дашбордов, автоматически импортируются в графану
+│  ├── dags/
+│  │  └── currency_pipeline.py  # dag
+│  └── reports/                 # еженедельные excel отчеты
+│     └── svod_auto_report.xlsx # PQ-шаблон для сборки сводного отчета
+├── currency_dbt/               # dbt проект
+│  ├── dbt_project.yml
+│  ├── packages.yml             # dbt-utils макросы для тестирования данных
+│  ├── profiles.yml
+│  └── models/
+│     ├── staging/
+│     ├── intermediate/
+│     └── marts/ 
+├── grafana/provisioning/
+│  ├── alerting/
+│  │  ├── contact_points.yaml
+│  │  ├── policies.yaml
+│  │  └── alert_rules.yaml
+│  ├── dashboards/
+│  │  ├── dashboards.yml
+│  │  └── json/                 # json дашбордов, автоматически импортируются в графану
+│  │     ├── business/          # бизнес-дашборды
+│  │     │  ├── currency_dash.json
+│  │     │  ├── usd_dash.json
+│  │     │  └── thb_dash.json
+│  │     └── tech/              # технические дашборды
+│  │        └── etl_monitoring.json
+│  └── datasources/
+│     └── postgres.yaml
 ├── src/elt/
-│ ├── api_client.py          # запросы курсов с ретраями
-│ ├── xml_converter.py       # xml в json
-│ ├── loader.py              # upsert в БД
-│ ├── config.py              # константы
-│ └── run.py                 # ручной запуск для отладки
+│  ├── api_client.py            # запросы курсов с ретраями
+│  ├── xml_converter.py         # xml в json
+│  ├── loader.py                # upsert в БД
+│  ├── config.py                # константы
+│  └── run.py                   # ручной запуск для отладки
 ├── tests/
-│ ├── test_api_client.py
-│ └── test_loader.py
+│  ├── test_api_client.py
+│  └── test_loader.py
 ├── sql/
-│ ├── init_airflow_db.sql
-│ └── init_grafana_user.sql
+│  ├── init_airflow_db.sql
+│  ├── init_airflow_reader.sql
+│  └── init_grafana_user.sql
 ├── screenshots/
-├── Dockerfile               # образ airflow:2.9.3 + dbt-postgres
-├── docker-compose.yml       # postgres, airflow, pgadmin, grafana
-├── pyproject.toml           # зависимости (uv)
+├── Dockerfile                 # образ airflow:2.9.3 + dbt-postgres
+├── docker-compose.yml         # postgres, airflow, pgadmin, grafana
+├── pyproject.toml             # зависимости (uv)
 ├── .env.example
 └── README.md
 ```
@@ -143,13 +153,27 @@ docker-compose up -d
 ###### Настройка SMTP через Connection:
 
 Conn Id: smtp_default
+
 Conn Type: smtp
+
 Host: smtp.yandex.ru (или другой)
+
 Port: 465
+
 Login: адрес почты (например your_login@yandex.ru)
+
 Password: пароль приложения (не от почты)
+
 Disable TLS: проставить галочку
 
+---
+#####  Мониторинг состояния ETL
+
+Для контроля состояния пайплайна добавлен **дашборд ETL Healthcheck**. Источник данных: метабаза Airflow
+
+![ETL Healthcheck dashboard](screenshots/etl_healthcheck_dash.png)
+
+Также настроен **алерт**, который срабатывает, если последний успешный запуск дага `currency_pipeline` был более 24 часов назад, с уведомлением на email (замените адрес почты recipient_login@example.com в `grafana/provisioning/alerting/contact_points.yaml` на нужный).
 
 ---
 #####  Тесты
@@ -167,6 +191,6 @@ uv run pytest tests/ -v
 
 * инкрементальные модели dbt
   сейчас тип материализации table, т.к. данных мало (~20 тыс строк в год), при росте может иметь смысл перевести на incremental чтобы не пересобирать таблицы каждый день
-* добавить дашборд в графане для мониторинга elt на основе данных метабазы эйрфлоу
+* ~~добавить дашборд в графане для мониторинга elt на основе данных метабазы эйрфлоу~~
 * добавить makefile
 * добавить больше тестов

@@ -1,0 +1,3 @@
+apiVersion: 1
+policies:
+  - receiver: email_alert

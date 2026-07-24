@@ -11,6 +11,13 @@ services:
     volumes:
       - currency_pgdata:/var/lib/postgresql/data
       - ./sql/init_airflow_db.sql:/docker-entrypoint-initdb.d/init_airflow_db.sql
+      - ./sql/init_grafana_user.sql:/docker-entrypoint-initdb.d/init_grafana_user.sql
+      - ./sql/init_airflow_reader.sql:/docker-entrypoint-initdb.d/init_airflow_reader.sql
+    command: >
+      bash -c " docker-entrypoint.sh postgres &
+      sleep 5 &&
+      psql -U ${DB_USER} -d airflow -f ./docker-entrypoint-initdb.d/init_airflow_reader.sql &&
+      wait"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
@@ -30,16 +37,7 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__WEBSERVER__RBAC: "False"
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
-      # переменные для SMTP
-      # перенастроено через Connections
-      # AIRFLOW__SMTP__SMTP_HOST: smtp.yandex.ru
-      # AIRFLOW__SMTP__SMTP_PORT: 465
-      # AIRFLOW__SMTP__SMTP_SSL: True
-      # AIRFLOW__SMTP__SMTP_USER: ${SMTP_USER}
-      # AIRFLOW__SMTP__SMTP_PASSWORD: ${SMTP_PWD}
-      # AIRFLOW__SMTP__SMTP_MAIL_FROM: ${SMTP_USER}
       REPORT_MAIL_TO: ${MAIL_TO}
-      # AIRFLOW__EMAIL__EMAIL_BACKEND: airflow.utils.email.send_email_smtp
       # переменные для dbt
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PWD}
@@ -68,16 +66,7 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql://${DB_USER}:${DB_PWD}@postgres/airflow
       DATABASE_URL: postgresql://${DB_USER}:${DB_PWD}@postgres/${DB_NAME}
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      # переменные для SMTP
-      # перенастроено через Connections
-      # AIRFLOW__SMTP__SMTP_HOST: smtp.yandex.ru
-      # AIRFLOW__SMTP__SMTP_PORT: 465
-      # AIRFLOW__SMTP__SMTP_SSL: True
-      # AIRFLOW__SMTP__SMTP_USER: ${SMTP_USER}
-      # AIRFLOW__SMTP__SMTP_PASSWORD: ${SMTP_PWD}
-      # AIRFLOW__SMTP__SMTP_MAIL_FROM: ${SMTP_USER}
       REPORT_MAIL_TO: ${MAIL_TO}
-      # AIRFLOW__EMAIL__EMAIL_BACKEND: airflow.utils.email.send_email_smtp
       # переменные для dbt
       DBT_PROFILES_DIR: /opt/airflow/currency_dbt
       DB_USER: ${DB_USER}
@@ -98,10 +87,21 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: cur_grafana
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "3000:3000"
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST: ${SMTP_HOST}
+      GF_SMTP_USER: ${SMTP_USER}
+      GF_SMTP_PASSWORD: ${SMTP_PWD}
+      GF_SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      GF_SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      GF_SMTP_SKIP_VERIFY: "true"
+      #GF_SMTP_STARTTLS_POLICY: NoStartTLS
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
