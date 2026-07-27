@@ -38,7 +38,13 @@ Thumbs.db
 # Airflow
 airflow/logs/
 
-
 .ruff_cache/
 .pytest_cache/
 
+
+# Еженедельные отчеты
+weekly_report_*.xlsx
+
+# dbt
+target/
+dbt_packages/
