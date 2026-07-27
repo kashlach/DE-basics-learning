@@ -7,18 +7,16 @@
 
 Знакомство с Apache Airflow для оркестрации задач на практике.
 
-
 **Что нового было освоено в рамках проекта**
 
-* Контейнеризация с помощью Docker Compose
-* Взаимодействие с PostgreSQL через `PostgresHook` (метабаза Airflow и целевая БД)
-* Разработка DAG в Airflow с расписанием
+* Контейнеризация с помощью **Docker Compose**
+* Взаимодействие с PostgreSQL через `PostgresHook`
+* Разработка DAG в Airflow
 * Использование `PythonOperator`, `BashOperator` и `BranchPythonOperator`
-* Обмен данными между задачами через XCom
+* Обмен данными между задачами через `XCom`
 * Использование `Variables` (счётчик запусков)
 * Мониторинг выполнения тасков через Web UI Airflow
 * Работа с pgAdmin
-
 
 ### Структура проекта
 
@@ -27,10 +25,9 @@ airflow_dags/
 ├── dags/
 │ ├── autoparse_github_events.py # DAG для автозапуска парсера
 │ └── parser.py                  # Скрипт загрузки из GitHub API
-├── logs/                        # Логи выполнения DAG-ов
-├── data/
-├── screenshots/
-├── docker-compose.yml           # Конфигурация Airflow + PostgreSQL + pgAdmin
+├── logs/                        # Логи выполнения DAG
+├── screenshots/                 
+├── docker-compose.yml           # Airflow + PostgreSQL + pgAdmin
 └── README.md
 ```
 

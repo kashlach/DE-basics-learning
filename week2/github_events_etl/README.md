@@ -22,12 +22,15 @@
 
 ```
 github_events_etl/
+├── requirements.in       # минимальные версии
+├── requirements.txt      # зафиксированные версии
 ├── init.sql              # DDL (таблицы, индексы)
 ├── parser.py             # ETL-скрипт
-├── requirements.in       # Минимальные зависимости
-├── requirements.txt      # Зафиксированные версии
-├── sql/analytics/        # Отдельные SQL-запросы
-├── reports/              # CSV-отчёты (демонстрационные)
+├── sql/                  # отдельные селекты
+│  ├── events_type.sql      # кол-во событий в разбивке по типам
+│  ├── issues_action.sql    # action из payload из сырого json
+│  └── payload_mdn_len.sql  # медианный размер секции payload в разбивке по типу события
+├── reports/              # csv-отчеты как результат выполнения запросов из sql/ 
 └── README.md
 ```
 
@@ -63,9 +66,9 @@ pip install -r requirements.txt
 ```bash
 python parser.py
 ```
-4. Выполнить SELECT-запросы (опционально):
+4. Выполнить SELECT'ы (опционально):
 
 ```bash
-docker exec -i pg-github-events psql -U postgres -d github_events_db --csv < sql/analytics/top_repos.sql > reports/top_repos.csv
+docker exec -i pg-github-events psql -U postgres -d github_events_db --csv < sql/top_repos.sql > reports/top_repos.csv
 ```
 [^1]: Периодического сбора данных нет, это тема следующего проекта (Airflow).

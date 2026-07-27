@@ -1,12 +1,10 @@
 ## Реализация Slowly Changing Dimension (SCD) Type 2
 
-Инкрементальная загрузка данных из источника (таблица Customers - источник бизнес-ключа customer_id и атрибутов: name, address, phone) в staging-слой и сохранение полной истории изменений атрибутов клиентов.
-
+Инкрементальная загрузка данных из источника (таблица customers) в staging-слой и сохранение полной истории изменений атрибутов клиентов.
 
 ### Цель
 
 Упрощенная реализация подхода к построению аналитического хранилища данных с сохранением полной истории изменений для практической отработки навыка оркестрации задач. 
-
 
 **Что нового было освоено в рамках проекта**
 
@@ -16,35 +14,38 @@
 * ELT-подход
 
 
-### Архитектура
-
-Проект использует три основных слоя:
-
-1. Источник (source) - имитация микросервиса с данными о клиентах, даг для генерации данных сгенерирован ИИ
-2. Staging - промежуточный слой для хранения сырых данных
-3. Dimension - слой с SCD Type 2 историей изменений
-
-
 ### Структура проекта
 
 ```text
 airflow_dags/
-├── dags/
-│   ├── source_dag.py          # Генератор тестовых данных
-│   ├── staging_dag.py         # Загрузка в staging-слой
-│   └── scd2_dag.py            # SCD Type 2 обработка
+├── dags/scd2_project/
+│   ├── source_dag.py          # генерация данных источника
+│   ├── staging_dag.py         # формирование staging
+│   └── scd2_dag.py            # SCD Type 2 реализация
 ├── logs/                      # Логи Airflow
-├── data/                      # Данные (если нужны)
-├── screenshots/               # Скриншоты для документации
-├── docker-compose.yml         # Конфигурация Docker
+├── screenshots/
+├── docker-compose.yml         # Airflow + PostgreSQL + pgAdmin
 └── README.md
 ```
 
 ---
 
-##### Модель данных
+### Архитектура
 
-Source (источник)
+```text
+Источник - source.customers
+имитация микросервиса с данными о клиентах (insert/update, даг сгенерирован ИИ)
+  ↓
+Staging - scd2.customers_staging
+промежуточный слой для определения изменений
+  ↓
+Dimension - scd2.dim_customers
+реализация SCD Type 2, история изменений
+```
+
+#### Модель данных
+
+##### Источник
 ```sql
 CREATE TABLE source.customers (
     customer_id INTEGER PRIMARY KEY,
@@ -56,7 +57,7 @@ CREATE TABLE source.customers (
 );
 ```
 
-Staging
+##### Staging
 ```sql
 CREATE TABLE scd2.customers_staging (
     customer_id INTEGER PRIMARY KEY,
@@ -69,7 +70,7 @@ CREATE TABLE scd2.customers_staging (
 );
 ```
 
-Dimension (SCD2)
+##### Dimension (SCD2)
 ```sql
 CREATE TABLE scd2.dim_customers (
     id INTEGER PRIMARY KEY DEFAULT nextval('scd2.surrogate_key'),
@@ -83,7 +84,7 @@ CREATE TABLE scd2.dim_customers (
 );
 ```
 
-Metadata (метаданные о загрузке)
+##### Metadata 
 ```sql
 CREATE TABLE scd2.metadata (
     table_name VARCHAR(100) PRIMARY KEY,
@@ -92,15 +93,14 @@ CREATE TABLE scd2.metadata (
 );
 ```
 
-
-##### DAG'и проекта
-
 ---
 
-1. *source_dag.py*  
-Генерирует тестовые данные в таблице source.customers
+### DAG'и проекта
 
-###### Функциональность:
+1. **source_dag.py**  
+Генерирует данные в таблице source.customers
+
+   ###### Функциональность:
 
 * Создание схемы и таблицы source.customers
 * Генерация начальных 5 записей
@@ -112,12 +112,10 @@ CREATE TABLE scd2.metadata (
 
 ![Граф source_dag](https://screenshots/source_dag_graph.png)
 
----
-
-2. *staging_dag.py*
+2. **staging_dag.py**
 Выполняет инкрементальную загрузку данных из источника в staging-слой с использованием MERGE.
 
-###### Функциональность:
+   ###### Функциональность:
 
 * Создание схем и таблиц для staging
 * Инкрементальная загрузка через MERGE
@@ -127,14 +125,13 @@ CREATE TABLE scd2.metadata (
 
 ![Граф staging_dag](https://screenshots/staging_dag_graph.png)
 
----
 
-3. *scd2_dag.py*
+3. **scd2_dag.py**
 Реализует SCD Type 2 логику: закрывает старые версии и создаёт новые при изменениях (через сочетание UPDATE и INSERT).
 
-###### Функциональность:
+   ###### Функциональность:
 
-* Создание dimension-таблицы с последовательностью для суррогатных ключей
+* Создание таблицы с суррогатным ключом
 * Закрытие старых версий (is_active = FALSE)
 * Вставка новых версий (is_active = TRUE)
 * Проверка целостности данных

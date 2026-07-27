@@ -1,6 +1,6 @@
 ## Airflow проекты
 
-В этой папке находятся **два независимых тренировочных проекта** на Apache Airflow. Оба используют общий стек (Airflow + PostgreSQL + Docker).
+В этой папке находятся **два независимых учебных проекта** на Apache Airflow. Оба используют общий стек (Airflow + PostgreSQL + Docker).
 
 ---
 
@@ -8,7 +8,7 @@
 
 **Кратко:** DAG загружает 100 последних публичных событий GitHub API каждые 5 минут, проверяет лимит запусков и логирует результат.
 
-**Подробнее:** [README.md](./airflow_dags/README.md)
+**Подробнее:** [GitHub Events README](./airflow_dags/README.md)
 
 ---
 
@@ -16,7 +16,7 @@
 
 **Кратко:** DAG-и для инкрементальной загрузки данных из источника в staging и dimension-слой с полной историей изменений.
 
-**Подробнее:** [README.md](./airflow_dags/scd2_project/README.md)
+**Подробнее:** [SCD2 README](./airflow_dags/scd2_project/README.md)
 
 ---
 
