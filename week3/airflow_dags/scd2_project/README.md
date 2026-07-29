@@ -110,7 +110,7 @@ CREATE TABLE scd2.metadata (
   * Мягкое удаление 0-1 клиента
   * Возможность холостых запусков (15% вероятность)
 
-![Граф source_dag](https://screenshots/source_dag_graph.png)
+![Граф source_dag](../screenshots/source_dag_graph.PNG)
 
 2. **staging_dag.py**
 Выполняет инкрементальную загрузку данных из источника в staging-слой с использованием MERGE.
@@ -123,7 +123,7 @@ CREATE TABLE scd2.metadata (
 * Маркировка операций: I (insert), U (update), D (delete)
 * Обновление метаданных о загрузке
 
-![Граф staging_dag](https://screenshots/staging_dag_graph.png)
+![Граф staging_dag](../screenshots/staging_dag_graph.PNG)
 
 
 3. **scd2_dag.py**
@@ -137,4 +137,4 @@ CREATE TABLE scd2.metadata (
 * Проверка целостности данных
 * Отслеживание лага между staging и dim
 
-![Граф scd2_dag](https://screenshots/scd2_dag_graph.png)
+![Граф scd2_dag](../screenshots/scd2_dag_graph.PNG)
