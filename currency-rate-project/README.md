@@ -85,15 +85,15 @@ currency-rate-project/
 └── README.md
 ```
 ##### Схема DAG и статусы тасков
-![Схема DAG](screenshots/currency_pipeline_dag.png)
+![Схема DAG](screenshots/currency_pipeline_dag.PNG)
 
 ##### Граф зависимостей dbt
 
-![Граф dbt](screenshots/dbt_graph.png)
+![Граф dbt](screenshots/dbt_graph.PNG)
 
 ##### Документация dbt (staging-слой)
 
-![staging-слой dbt](screenshots/dbt_stg_description.png)
+![staging-слой dbt](screenshots/dbt_stg_description.PNG)
 
 ---
 ### Запуск:
@@ -171,7 +171,7 @@ Disable TLS: проставить галочку
 
 Для контроля состояния пайплайна добавлен **дашборд ETL Healthcheck**. Источник данных: метабаза Airflow
 
-![ETL Healthcheck dashboard](screenshots/etl_healthcheck_dash.png)
+![ETL Healthcheck dashboard](screenshots/etl_healthcheck_dash.PNG)
 
 Также настроен **алерт**, который срабатывает, если последний успешный запуск дага `currency_pipeline` был более 24 часов назад, с уведомлением на email (замените адрес почты recipient_login@example.com в `grafana/provisioning/alerting/contact_points.yaml` на нужный).
 
