@@ -43,12 +43,12 @@ init_log_table → check_exec_limit
 
 ##### Статусы тасков (последние 100 запусков)
 
-![Статусы тасков](screenshots/dag_runs.png)
+![Статусы тасков](screenshots/dag_runs.PNG)
 
 
 ##### Таблица логов в pgAdmin
 
-![Таблица логов](screenshots/dag_logs.png)
+![Таблица логов](screenshots/dag_logs.PNG)
 
 
 ##### Ключевые моменты из кода
