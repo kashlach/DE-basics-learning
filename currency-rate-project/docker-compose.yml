@@ -40,7 +40,7 @@ services:
       REPORT_MAIL_TO: ${MAIL_TO}
       # переменные для dbt
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PWD}
+      DB_PWD: ${DB_PWD}
       DB_NAME: ${DB_NAME} 
     volumes:
       - ./src:/opt/airflow/src
@@ -70,7 +70,7 @@ services:
       # переменные для dbt
       DBT_PROFILES_DIR: /opt/airflow/currency_dbt
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PWD}
+      DB_PWD: ${DB_PWD}
       DB_NAME: ${DB_NAME}
     volumes:
       - ./src:/opt/airflow/src

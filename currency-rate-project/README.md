@@ -125,6 +125,16 @@ docker-compose up -d
 
 В Airflow включаем DAG currency_pipeline. Он настроен на ежедневное выполнение в 10:00 UTC.
 
+##### Запуск dbt с локальной машины
+
+Логин, пароль и имя БД в `profiles.yml` берутся из переменных окружения, поэтому нужно подгрузить `.env`:
+
+```bash
+uv run --env-file .env dbt run --project-dir currency_dbt --profiles-dir currency_dbt
+```
+
+Таргет по умолчанию — `dev`, он ходит в тот же контейнер с Postgres через `localhost:5432`, но пишет в схему `dev_finance`. Контейнеры при этом должны быть подняты.
+
 ---
 #####  Отчетность
 
