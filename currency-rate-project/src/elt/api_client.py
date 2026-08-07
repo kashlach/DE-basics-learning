@@ -6,7 +6,7 @@ import time
 
 import requests
 
-from .config import CBR_API_URL, MAX_RETRIES
+from .config import CBR_API_URL, MAX_RETRIES, REQUEST_TIMEOUT
 from .xml_converter import xml_to_json
 
 # логгер с именем, равным полному пути к текущему файлу, для понимания, из какого модуля сообщения
@@ -22,7 +22,7 @@ def build_url(target_date=None) -> str:
 def make_request(url) -> dict:
     logger.info(f"Запрос {url}")
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=REQUEST_TIMEOUT)
 
     if response.status_code == 404:
         logger.warning("Ошибка 404: нет данных")
