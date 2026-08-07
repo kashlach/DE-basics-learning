@@ -36,7 +36,6 @@ def get_target_date(context) -> date:
     return pendulum.instance(started).in_timezone(MSK).date()
 
 def ensure_raw_schema():
-    get_engine()
     ensure_tables()
 
 def extract_and_load(**context):
@@ -89,7 +88,7 @@ def form_weekly_rep(**context):
     # - ./airflow/reports:/opt/airflow/reports/
     write_path = f'/opt/airflow/reports/weekly_report_{rep_name_end}.xlsx'
     with pd.ExcelWriter(write_path, engine='openpyxl') as writer:
-        df.to_excel(writer, sheet_name='detailed')
+        df.to_excel(writer, sheet_name='detailed', index=False)
 
     return write_path if not is_manual else None # будет в xcom таски как return_value
 
@@ -99,6 +98,10 @@ def send_weekly_rep(**context):
 
     if not rep_path:
         logging.info('Отсутствует отчет к отправке')
+        return
+
+    if not email_to:
+        logging.warning('REPORT_MAIL_TO не задана, отчет не отправляем')
         return
 
     from airflow.providers.smtp.hooks.smtp import SmtpHook
@@ -137,6 +140,10 @@ def run_usd_alert(**context):
         logging.info(f'Был {prev_rate}, стал {current_rate} -> изменение на {change_pct}%')
 
         change_dir = 'Повышение' if change_pct >= 0 else 'Снижение'
+
+    if not email_to:
+        logging.warning('REPORT_MAIL_TO не задана, алерт не отправляем')
+        return
 
     # отправка алерта
     from airflow.providers.smtp.hooks.smtp import SmtpHook
