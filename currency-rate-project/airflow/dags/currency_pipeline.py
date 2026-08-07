@@ -1,8 +1,9 @@
 import logging
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
+import pendulum
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
@@ -14,16 +15,36 @@ from elt.loader import count_records, ensure_tables, get_engine, load_date
 
 email_to = os.getenv("REPORT_MAIL_TO")
 
+# ЦБ публикует курс на дату D вечером D-1, "сегодня" у него московское
+MSK = pendulum.timezone('Europe/Moscow')
+
+def get_target_date(context) -> date:
+    '''
+    Дата, на которую запрашиваем курс. Одна на все таски рана.
+
+    ds не подходит: по расписанию это вчера, при ручном запуске - сегодня.
+    Берем фактическую дату старта рана: она одинакова для всех тасков
+    и не меняется при ретраях.
+
+    Перезалить конкретный день: Trigger DAG w/ config {"target_date": "2026-08-07"}
+    '''
+    param_date = (context['params'] or {}).get('target_date')
+    if param_date:
+        return date.fromisoformat(param_date)
+
+    started = context['dag_run'].start_date or pendulum.now(MSK)
+    return pendulum.instance(started).in_timezone(MSK).date()
+
 def ensure_raw_schema():
     get_engine()
     ensure_tables()
 
 def extract_and_load(**context):
-    target_date = datetime.fromisoformat(context['ds'])
-    # context['ds'] - логич. дата, не дата факт. выпол-я
-    # = вчера при автоматич запуске
-    # = сегодня при ручном
+    target_date = get_target_date(context)
+    logging.info(f'Загружаем курсы на {target_date}')
     load_date(target_date)
+
+    return target_date.isoformat() # в xcom, чтобы дата была видна в UI
 
 def check_data_loaded():
     total = count_records()
@@ -36,13 +57,10 @@ def form_weekly_rep(**context):
     Отчет по пн при запуске по расписанию и в любой день при ручном.
     Возвращает путь к файлу, если отчет сформирован автоматом.
     '''
-    logical_date = context['ds'] # str YYYY-MM-DD
+    target_date = get_target_date(context)
     is_manual = context['dag_run'].external_trigger
 
-    # при авт запуске logical_date в пн = вс
-    # => чтобы отчет сформ в пн, нужно проверять на вс
-    # при ручном logical_date в пн = пн
-    if datetime.fromisoformat(logical_date).isoweekday() != 7 and not is_manual:
+    if target_date.isoweekday() != 1 and not is_manual:
         logging.info('Не Пн, отчет не формируем')
         return
 
@@ -50,18 +68,23 @@ def form_weekly_rep(**context):
     import pandas as pd
     from sqlalchemy import text
 
+    # прошедшая неделя: вс (день до запуска) и 6 дней до него
+    week_end = target_date - timedelta(days=1)
+    week_start = week_end - timedelta(days=6)
+
     engine = get_engine()
     df = pd.read_sql(text('''
         SELECT *, EXTRACT(WEEK FROM requested_date) AS week_num
         FROM finance_marts.dm_weekly_report
+        WHERE requested_date BETWEEN :week_start AND :week_end
         ORDER BY requested_date DESC, char_code ASC
     '''),
-    engine)
+    engine,
+    params={'week_start': week_start, 'week_end': week_end})
 
+    rep_name_end = target_date.isoformat()
     if is_manual:
-        rep_name_end = logical_date + '_manual'
-    else:
-        rep_name_end = logical_date
+        rep_name_end += '_manual'
 
     # - ./airflow/reports:/opt/airflow/reports/
     write_path = f'/opt/airflow/reports/weekly_report_{rep_name_end}.xlsx'
@@ -93,7 +116,7 @@ def send_weekly_rep(**context):
 def run_usd_alert(**context):
     from sqlalchemy import text
 
-    check_date = context['ds']
+    check_date = get_target_date(context).isoformat()
 
     engine = get_engine()
     with engine.connect() as conn:
@@ -152,6 +175,7 @@ with DAG(
     schedule='0 10 * * *', # 10:00 UTC, т.е. 13 по МСК
     catchup=False,
     max_active_runs=1,
+    params={'target_date': None}, # для перезаливки конкретного дня вручную
     tags=['raw', 'currency']
 ) as dag:
 
