@@ -1,12 +1,14 @@
 '''
 Тесты для loader
 '''
-from .loader import count_records, ensure_tables, get_engine, upsert_data
+from datetime import date
+
+from elt.loader import count_records, ensure_tables, get_engine, upsert_data
 
 
 def clean_db():
     '''Очистка БД перед каждым тестом'''
-    import .loader as loader
+    import elt.loader as loader
     loader._engine = None
     loader.DATABASE_URL = 'sqlite://'
     get_engine()
@@ -18,7 +20,7 @@ def test_insert():
     clean_db()
 
     data = {'Valute': {'USD': {'Value': 89.5, 'Nominal': 1}}}
-    result = upsert_data('27.06.2026', data)
+    result = upsert_data(date(2026, 6, 27), data)
     assert result == 'inserted'
     assert count_records() == 1
 
@@ -28,9 +30,9 @@ def test_update():
 
     data1 = {'Valute': {'USD': {'Value': 89.5, 'Nominal': 1}}}
     data2= {'Valute': {'USD': {'Value': 89.4, 'Nominal': 1}}}
-    date = '27.06.2026'
-    upsert_data(date, data1)
-    result = upsert_data(date, data2)
+    target_date = date(2026, 6, 27)
+    upsert_data(target_date, data1)
+    result = upsert_data(target_date, data2)
     assert result == 'updated'
     assert count_records() == 1
 
@@ -40,8 +42,8 @@ def test_multiple_diff():
 
     data1 = {'Valute': {'USD': {'Value': 89.5, 'Nominal': 1}}}
     data2= {'Valute': {'USD': {'Value': 89.4, 'Nominal': 1}}}
-    upsert_data('25.06.2026', data1)
-    upsert_data('26.06.2026', data2)
+    upsert_data(date(2026, 6, 25), data1)
+    upsert_data(date(2026, 6, 26), data2)
     assert count_records() == 2
 
 def test_multiple_same():
@@ -50,6 +52,6 @@ def test_multiple_same():
 
     data = {'Valute': {'USD': {'Value': 89.5, 'Nominal': 1}}}
     for _ in range(4):
-        upsert_data('26.06.2026', data)
+        upsert_data(date(2026, 6, 26), data)
 
     assert count_records() == 1
