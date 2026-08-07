@@ -115,15 +115,24 @@ def load_date(target_date) -> str:
 
     return upsert_data(target_date, api_resp)
 
-def count_records():
-    '''Возвращает к-во записей в таблице'''
+def count_records(request_date=None):
+    '''
+    Возвращает к-во записей в таблице.
+    С request_date - только за эту дату.
+    '''
     ensure_tables()
     engine = get_engine()
 
     table_name = 'currency_rates_raw' if is_sqlite() else 'raw.currency_rates_raw'
 
+    sql = f'SELECT COUNT(*) FROM {table_name}'
+    params = {}
+    if request_date is not None:
+        sql += ' WHERE request_date = :d'
+        params['d'] = str(request_date)
+
     with engine.connect() as conn:
-        result = conn.execute(text(f'SELECT COUNT(*) FROM {table_name}'))
+        result = conn.execute(text(sql), params)
         total = result.scalar()
         logger.info(f"Записей в БД: {total}")
         return total

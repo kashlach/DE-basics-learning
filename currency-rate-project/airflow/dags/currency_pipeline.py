@@ -46,10 +46,10 @@ def extract_and_load(**context):
 
     return target_date.isoformat() # в xcom, чтобы дата была видна в UI
 
-def check_data_loaded():
-    total = count_records()
-    if total == 0:
-        raise Exception('В БД нет записей после загрузки!')
+def check_data_loaded(**context):
+    target_date = get_target_date(context)
+    if count_records(target_date) == 0:
+        raise Exception(f'В БД нет записей за {target_date} после загрузки!')
 
 def form_weekly_rep(**context):
     '''
