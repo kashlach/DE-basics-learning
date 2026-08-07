@@ -50,7 +50,9 @@ def ensure_tables() -> None:
             )
         '''
 
-    with engine.connect() as conn:
+    # begin(), а не connect(): в SQLAlchemy 2.0 нет автокоммита,
+    # без явной транзакции DDL откатится при закрытии соединения
+    with engine.begin() as conn:
         conn.execute(text(create_sql))
 
     logger.info("Таблица готова")
@@ -67,7 +69,9 @@ def upsert_data(request_date, raw_json) -> str:
     json_str = json.dumps(raw_json, ensure_ascii=False)
     table_name = 'currency_rates_raw' if is_sqlite() else 'raw.currency_rates_raw'
 
-    with engine.connect() as conn:
+    # begin() коммитит при выходе из блока и откатывает при исключении,
+    # заодно проверка наличия и сама запись попадают в одну транзакцию
+    with engine.begin() as conn:
         check = text(f'SELECT COUNT(*) FROM {table_name} WHERE request_date = :d')
         result = conn.execute(check, {'d': date_str})
         exists = result.scalar() > 0
