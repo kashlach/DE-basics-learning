@@ -127,14 +127,16 @@ def run_usd_alert(**context):
               AND alert_triggered = TRUE
         '''), {'dt': check_date}).fetchone()
 
-        if not (row and row[0]):
+        if row is None:
             logging.info('С курсом USD все нормально')
             return
 
-        logging.info('Скачок курса USD!')
-        logging.info(f'Был {row[0]}, стал {row[1]} -> изменение на {row[2]}%')
+        current_rate, prev_rate, change_pct = row
 
-        change_dir = 'Повышение' if row[2] >= 0 else 'Снижение'
+        logging.info('Скачок курса USD!')
+        logging.info(f'Был {prev_rate}, стал {current_rate} -> изменение на {change_pct}%')
+
+        change_dir = 'Повышение' if change_pct >= 0 else 'Снижение'
 
     # отправка алерта
     from airflow.providers.smtp.hooks.smtp import SmtpHook
@@ -144,9 +146,9 @@ def run_usd_alert(**context):
     body = f'''
     <h1>{change_dir} курса</h1>
     <ul>
-        <li><b>Предыдущее значение:</b> {row[1]}</li>
-        <li><b>Текущее значение:</b> {row[0]}</li>
-        <li><b>Изменение:</b> {row[2]}%</li>
+        <li><b>Предыдущее значение:</b> {prev_rate}</li>
+        <li><b>Текущее значение:</b> {current_rate}</li>
+        <li><b>Изменение:</b> {change_pct}%</li>
     </ul>
     '''
 
