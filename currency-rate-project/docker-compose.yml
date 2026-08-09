@@ -51,7 +51,7 @@ services:
     command: >
       bash -c "cd /opt/airflow/currency_dbt && dbt deps &&
       airflow db migrate &&
-      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
+      (airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true) &&
       airflow webserver
       "
     restart: unless-stopped
@@ -80,6 +80,7 @@ services:
       - ./airflow/reports:/opt/airflow/reports/
     command: >
       bash -c "cd /opt/airflow/currency_dbt && dbt deps &&
+      airflow db check-migrations --migration-wait-timeout=120 &&
       airflow scheduler
       "
     restart: unless-stopped
