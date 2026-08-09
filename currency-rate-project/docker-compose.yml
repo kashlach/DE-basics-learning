@@ -102,6 +102,9 @@ services:
       GF_SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
       GF_SMTP_FROM_NAME: ${SMTP_FROM_NAME}
       GF_SMTP_SKIP_VERIFY: "true"
+      # пароли пользователей БД для датасорсов, подставляются в provisioning
+      GRAFANA_PWD: ${GRAFANA_PWD}
+      AIRFLOW_READER_PWD: ${AIRFLOW_READER_PWD}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning

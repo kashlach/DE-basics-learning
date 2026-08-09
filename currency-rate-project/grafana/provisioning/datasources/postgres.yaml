@@ -7,7 +7,7 @@ datasources:
     url: postgres:5432
     user: grafanareader
     secureJsonData:
-      password: grafana_pass
+      password: $GRAFANA_PWD
     jsonData:
       database: currency_db
       sslmode: 'disable'
@@ -23,7 +23,7 @@ datasources:
     url: postgres:5432
     user: airflowreader
     secureJsonData:
-      password: afreader_pass
+      password: $AIRFLOW_READER_PWD
     jsonData:
       database: airflow
       sslmode: 'disable'
