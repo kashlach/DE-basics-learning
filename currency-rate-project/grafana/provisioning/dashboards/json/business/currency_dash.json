@@ -1,604 +1,472 @@
 {
-  "apiVersion": "dashboard.grafana.app/v2",
-  "kind": "Dashboard",
-  "metadata": {
-    "name": "adsf6qh",
-    "namespace": "default",
-    "uid": "83f51089-ddf6-4db6-8591-94e2b8b7876e",
-    "resourceVersion": "1784018997281000",
-    "generation": 6,
-    "creationTimestamp": "2026-07-09T09:11:48Z",
-    "labels": {
-      "grafana.app/deprecatedInternalID": "3490057994739712"
-    },
-    "annotations": {
-      "grafana.app/createdBy": "user:ffqo8l7va1t6oc",
-      "grafana.app/folder": "",
-      "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/updatedBy": "user:ffqo8l7va1t6oc",
-      "grafana.app/updatedTimestamp": "2026-07-14T08:49:57Z"
-    }
-  },
-  "spec": {
-    "annotations": [
+  "annotations": {
+    "list": [
       {
-        "kind": "AnnotationQuery",
-        "spec": {
-          "query": {
-            "kind": "DataQuery",
-            "group": "grafana",
-            "version": "v0",
-            "datasource": {
-              "name": "-- Grafana --"
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "currency_postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "light-yellow",
+                  "index": 0
+                }
+              },
+              "type": "value"
             },
-            "spec": {}
-          },
-          "enable": true,
-          "hide": true,
-          "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
-          "builtIn": true
-        }
-      }
-    ],
-    "cursorSync": "Off",
-    "editable": true,
-    "elements": {
-      "panel-1": {
-        "kind": "Panel",
-        "spec": {
-          "id": 1,
-          "title": "THB изменение за день, %",
-          "description": "",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "grafana-postgresql-datasource",
-                      "version": "v0",
-                      "datasource": {
-                        "uid": "currency_postgres"
-                      },
-                      "spec": {
-                        "dataset": "currency_db",
-                        "editorMode": "code",
-                        "format": "table",
-                        "rawQuery": true,
-                        "rawSql": "SELECT daily_change_pct\r\nFROM finance_marts.dm_weekly_report \r\nWHERE char_code = 'THB' \r\nORDER BY requested_date DESC \r\nLIMIT 1",
-                        "sql": {
-                          "columns": [
-                            {
-                              "alias": "\"Изменение за день, %\"",
-                              "name": "AVG",
-                              "parameters": [
-                                {
-                                  "name": "daily_change_pct",
-                                  "type": "functionParameter"
-                                }
-                              ],
-                              "type": "function"
-                            }
-                          ],
-                          "groupBy": [
-                            {
-                              "property": {
-                                "name": "requested_date",
-                                "type": "string"
-                              },
-                              "type": "groupBy"
-                            }
-                          ],
-                          "limit": 1,
-                          "orderBy": {
-                            "property": {
-                              "name": "requested_date",
-                              "type": "string"
-                            },
-                            "type": "property"
-                          },
-                          "orderByDirection": "DESC",
-                          "whereJsonTree": {
-                            "children1": [
-                              {
-                                "id": "8898b9ab-cdef-4012-b456-719f4616b8b1",
-                                "properties": {
-                                  "field": "char_code",
-                                  "fieldSrc": "field",
-                                  "operator": "equal",
-                                  "value": [
-                                    "USD"
-                                  ],
-                                  "valueError": [
-                                    null
-                                  ],
-                                  "valueSrc": [
-                                    "value"
-                                  ],
-                                  "valueType": [
-                                    "text"
-                                  ]
-                                },
-                                "type": "rule"
-                              }
-                            ],
-                            "id": "89898bb9-0123-4456-b89a-b19f4615d0d8",
-                            "type": "group"
-                          },
-                          "whereString": "char_code = 'USD'"
-                        },
-                        "table": "finance_marts.dm_weekly_report"
-                      }
-                    },
-                    "refId": "thb_daily_change_pct",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "stat",
-            "version": "13.1.0",
-            "spec": {
+            {
               "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
+                "from": 0,
+                "result": {
+                  "color": "red",
+                  "index": 1
                 },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
+                "to": 100
               },
-              "fieldConfig": {
-                "defaults": {
-                  "decimals": 2,
-                  "mappings": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "0": {
-                          "color": "light-yellow",
-                          "index": 0
-                        }
-                      }
-                    },
-                    {
-                      "type": "range",
-                      "options": {
-                        "from": 0,
-                        "to": 100,
-                        "result": {
-                          "color": "red",
-                          "index": 1
-                        }
-                      }
-                    },
-                    {
-                      "type": "range",
-                      "options": {
-                        "from": -100,
-                        "to": 0,
-                        "result": {
-                          "color": "green",
-                          "index": 2
-                        }
-                      }
-                    },
-                    {
-                      "type": "special",
-                      "options": {
-                        "match": "null",
-                        "result": {
-                          "color": "text",
-                          "index": 3
-                        }
-                      }
-                    }
-                  ],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "thresholds"
-                  }
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": -100,
+                "result": {
+                  "color": "green",
+                  "index": 2
                 },
-                "overrides": []
-              }
+                "to": 0
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "text",
+                  "index": 3
+                }
+              },
+              "type": "special"
             }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
           }
         }
       },
-      "panel-2": {
-        "kind": "Panel",
-        "spec": {
-          "id": 2,
-          "title": "Курс USD/THB/EUR",
-          "description": "",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "grafana-postgresql-datasource",
-                      "version": "v0",
-                      "datasource": {
-                        "uid": "currency_postgres"
-                      },
-                      "spec": {
-                        "dataset": "currency_db",
-                        "editorMode": "code",
-                        "format": "table",
-                        "rawQuery": true,
-                        "rawSql": "SELECT \r\n  char_code AS \"Валюта\", \r\n  rate AS \"Текущий курс\", \r\n  prev_date_rate AS \"Предыдущий день\",\r\n  avg_rate_7d AS \"Среднее за 7 дней\"\r\nFROM finance_marts.dm_weekly_report\r\nWHERE char_code in ('USD', 'EUR', 'THB')\r\nORDER BY requested_date DESC,\r\n  CASE\r\n    WHEN char_code = 'THB' THEN 1\r\n\t  WHEN char_code = 'USD' THEN 2\r\n\t  ELSE 3\r\n  END\r\nLIMIT 3",
-                        "sql": {
-                          "columns": [
-                            {
-                              "parameters": [],
-                              "type": "function"
-                            }
-                          ],
-                          "groupBy": [
-                            {
-                              "property": {
-                                "type": "string"
-                              },
-                              "type": "groupBy"
-                            }
-                          ],
-                          "limit": 50
-                        }
-                      }
-                    },
-                    "refId": "current_rates",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "table",
-            "version": "13.1.0",
-            "spec": {
-              "options": {
-                "cellHeight": "md",
-                "showHeader": true,
-                "sortBy": []
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "decimals": 2,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "fixed"
-                  },
-                  "custom": {
-                    "align": "auto",
-                    "cellOptions": {
-                      "type": "auto"
-                    },
-                    "footer": {
-                      "reducers": []
-                    },
-                    "inspect": false,
-                    "minWidth": 100
-                  }
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Валюта"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 111
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Текущий курс"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 123
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Предыдущий день"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 162
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Среднее за 7 дней"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 157
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        }
+      "gridPos": {
+        "h": 6,
+        "w": 9,
+        "x": 0,
+        "y": 0
       },
-      "panel-3": {
-        "kind": "Panel",
-        "spec": {
-          "id": 3,
-          "title": "Динамика курса THB за месяц",
-          "description": "",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "grafana-postgresql-datasource",
-                      "version": "v0",
-                      "datasource": {
-                        "uid": "currency_postgres"
-                      },
-                      "spec": {
-                        "dataset": "currency_db",
-                        "editorMode": "code",
-                        "format": "table",
-                        "rawQuery": true,
-                        "rawSql": "SELECT requested_date::DATE, rate \r\nFROM finance_int.int_daily_rates\r\nWHERE char_code = 'THB' \r\n  AND requested_date >= NOW() - INTERVAL '30 days' \r\nORDER BY requested_date",
-                        "sql": {
-                          "columns": [
-                            {
-                              "parameters": [],
-                              "type": "function"
-                            }
-                          ],
-                          "groupBy": [
-                            {
-                              "property": {
-                                "type": "string"
-                              },
-                              "type": "groupBy"
-                            }
-                          ],
-                          "limit": 50
-                        }
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [],
-              "queryOptions": {}
-            }
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "13.1.0",
+      "targets": [
+        {
+          "dataset": "currency_db",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "currency_postgres"
           },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "timeseries",
-            "version": "13.1.0",
-            "spec": {
-              "options": {
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "enableFacetedFilter": false,
-                  "overflow": "ellipsis",
-                  "placement": "bottom",
-                  "showLegend": false
-                },
-                "timezone": [
-                  ""
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT daily_change_pct\r\nFROM finance_marts.dm_weekly_report \r\nWHERE char_code = 'THB' \r\nORDER BY requested_date DESC \r\nLIMIT 1",
+          "refId": "thb_daily_change_pct",
+          "sql": {
+            "columns": [
+              {
+                "alias": "\"Изменение за день, %\"",
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "daily_change_pct",
+                    "type": "functionParameter"
+                  }
                 ],
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "single",
-                  "sort": "none"
-                }
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "requested_date",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 1,
+            "orderBy": {
+              "property": {
+                "name": "requested_date",
+                "type": "string"
               },
-              "fieldConfig": {
-                "defaults": {
-                  "decimals": 2,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      }
+              "type": "property"
+            },
+            "orderByDirection": "DESC",
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8898b9ab-cdef-4012-b456-719f4616b8b1",
+                  "properties": {
+                    "field": "char_code",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      "USD"
+                    ],
+                    "valueError": [
+                      null
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "text"
                     ]
                   },
-                  "color": {
-                    "mode": "palette-classic",
-                    "seriesBy": "last"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisGridShow": true,
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineStyle": {
-                      "fill": "solid"
-                    },
-                    "lineWidth": 2,
-                    "pointSize": 6,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "auto",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
+                  "type": "rule"
+                }
+              ],
+              "id": "89898bb9-0123-4456-b89a-b19f4615d0d8",
+              "type": "group"
+            },
+            "whereString": "char_code = 'USD'"
+          },
+          "table": "finance_marts.dm_weekly_report"
         }
-      }
+      ],
+      "title": "THB изменение за день, %",
+      "type": "stat"
     },
-    "layout": {
-      "kind": "GridLayout",
-      "spec": {
-        "items": [
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 0,
-              "y": 0,
-              "width": 9,
-              "height": 6,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-1"
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "currency_postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 100
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
               }
-            }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Валюта",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 111
+              }
+            ]
           },
           {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 9,
-              "y": 0,
-              "width": 15,
-              "height": 6,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-2"
+            "matcher": {
+              "id": "byName",
+              "options": "Текущий курс",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 123
               }
-            }
+            ]
           },
           {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 0,
-              "y": 6,
-              "width": 24,
-              "height": 9,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-3"
+            "matcher": {
+              "id": "byName",
+              "options": "Предыдущий день",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 162
               }
-            }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Среднее за 7 дней",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 157
+              }
+            ]
           }
         ]
-      }
-    },
-    "links": [],
-    "liveNow": false,
-    "preload": false,
-    "tags": [],
-    "timeSettings": {
-      "timezone": "browser",
-      "from": "now-30d",
-      "to": "now",
-      "autoRefresh": "1d",
-      "autoRefreshIntervals": [
-        "12h",
-        "1d",
-        "3d"
-      ],
-      "hideTimepicker": true,
-      "weekStart": "monday",
-      "fiscalYearStartMonth": 0
-    },
-    "title": "Мониторим курс батов",
-    "variables": [],
-    "preferences": {
-      "layout": {
-        "kind": "GridLayout",
-        "spec": {
-          "items": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 15,
+        "x": 9,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "md",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "13.1.0",
+      "targets": [
+        {
+          "dataset": "currency_db",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "currency_postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n  char_code AS \"Валюта\", \r\n  rate AS \"Текущий курс\", \r\n  prev_date_rate AS \"Предыдущий день\",\r\n  avg_rate_7d AS \"Среднее за 7 дней\"\r\nFROM finance_marts.dm_weekly_report\r\nWHERE char_code in ('USD', 'EUR', 'THB')\r\nORDER BY requested_date DESC,\r\n  CASE\r\n    WHEN char_code = 'THB' THEN 1\r\n\t  WHEN char_code = 'USD' THEN 2\r\n\t  ELSE 3\r\n  END\r\nLIMIT 3",
+          "refId": "current_rates",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
         }
-      }
+      ],
+      "title": "Курс USD/THB/EUR",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "currency_postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 6,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 3,
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
+        },
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "enableFacetedFilter": false,
+          "overflow": "ellipsis",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "timezone": [
+          ""
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "13.1.0",
+      "targets": [
+        {
+          "dataset": "currency_db",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "currency_postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT requested_date::DATE, rate \r\nFROM finance_int.int_daily_rates\r\nWHERE char_code = 'THB' \r\n  AND requested_date >= NOW() - INTERVAL '30 days' \r\nORDER BY requested_date",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Динамика курса THB за месяц",
+      "type": "timeseries"
     }
-  }
+  ],
+  "preload": false,
+  "refresh": "1d",
+  "schemaVersion": 42,
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true,
+    "refresh_intervals": [
+      "12h",
+      "1d",
+      "3d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Мониторим курс батов",
+  "uid": "adsf6qh",
+  "weekStart": "monday"
 }

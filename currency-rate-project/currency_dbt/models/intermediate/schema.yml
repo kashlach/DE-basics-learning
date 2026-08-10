@@ -31,7 +31,10 @@ models:
   
       - name: prev_date_rate
         description: '{{ doc("prev_date_rate") }}'
-    
+
+      - name: prev_requested_date
+        description: '{{ doc("prev_requested_date") }}'
+
       - name: daily_change_pct
         description: '{{ doc("daily_change_pct") }}'
  

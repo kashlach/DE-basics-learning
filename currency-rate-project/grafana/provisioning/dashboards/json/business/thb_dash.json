@@ -1,756 +1,627 @@
 {
-  "apiVersion": "dashboard.grafana.app/v2",
-  "kind": "Dashboard",
-  "metadata": {
-    "name": "ad6xw2p",
-    "namespace": "default",
-    "uid": "57a81958-5490-4daf-928d-a8903de2aa97",
-    "resourceVersion": "1784019907951980",
-    "generation": 6,
-    "creationTimestamp": "2026-07-13T14:18:12Z",
-    "labels": {
-      "grafana.app/deprecatedInternalID": "513125599559680"
-    },
-    "annotations": {
-      "grafana.app/createdBy": "user:ffqo8l7va1t6oc",
-      "grafana.app/folder": "",
-      "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/updatedBy": "user:ffqo8l7va1t6oc",
-      "grafana.app/updatedTimestamp": "2026-07-14T09:05:07Z"
-    }
-  },
-  "spec": {
-    "annotations": [
+  "annotations": {
+    "list": [
       {
-        "kind": "AnnotationQuery",
-        "spec": {
-          "query": {
-            "kind": "DataQuery",
-            "group": "grafana",
-            "version": "v0",
-            "datasource": {
-              "name": "-- Grafana --"
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "USD, EUR, EGP, THB, TRY и VND",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "currency_postgres"
+      },
+      "description": "В какие дни недели валюты чаще растут или падают (среднее за 90 дней)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "mode": "basic",
+              "type": "color-background"
             },
-            "spec": {}
-          },
-          "enable": true,
-          "hide": true,
-          "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
-          "builtIn": true
-        }
-      }
-    ],
-    "cursorSync": "Off",
-    "description": "USD, EUR, EGP, THB, TRY и VND",
-    "editable": true,
-    "elements": {
-      "panel-1": {
-        "kind": "Panel",
-        "spec": {
-          "id": 1,
-          "title": "Тепловая карта изменения курса валют",
-          "description": "В какие дни недели валюты чаще растут или падают (среднее за 90 дней)",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "grafana-postgresql-datasource",
-                      "version": "v0",
-                      "datasource": {
-                        "uid": "currency_postgres"
-                      },
-                      "spec": {
-                        "dataset": "currency_db",
-                        "editorMode": "code",
-                        "format": "table",
-                        "rawQuery": true,
-                        "rawSql": "SELECT\r\n    char_code AS \"Валюта\",\r\n    CASE EXTRACT(dow FROM requested_date) \r\n      WHEN 0 THEN 'Вс'\r\n      WHEN 1 THEN 'Пн'\r\n      WHEN 2 THEN 'Вт'\r\n      WHEN 3 THEN 'Ср'\r\n      WHEN 4 THEN 'Чт'\r\n      WHEN 5 THEN 'Пт'\r\n      WHEN 6 THEN 'Сб'\r\n    END AS \"День недели\",\r\n    AVG(daily_change_pct) AS avg_change\r\nFROM finance_int.int_daily_rates\r\nWHERE requested_date >= NOW() - INTERVAL '90 days'\r\n  AND char_code IN ('USD', 'EUR', 'EGP', 'THB', 'TRY', 'VND')\r\nGROUP BY char_code, EXTRACT(dow FROM requested_date)\r\nORDER BY char_code,\r\n         CASE EXTRACT(dow FROM requested_date)\r\n         WHEN 0 THEN 7\r\n         ELSE EXTRACT(dow FROM requested_date)\r\n         END;",
-                        "sql": {
-                          "columns": [
-                            {
-                              "parameters": [],
-                              "type": "function"
-                            }
-                          ],
-                          "groupBy": [
-                            {
-                              "property": {
-                                "type": "string"
-                              },
-                              "type": "groupBy"
-                            }
-                          ],
-                          "limit": 50
-                        }
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [
-                {
-                  "kind": "Transformation",
-                  "group": "groupingToMatrix",
-                  "spec": {
-                    "options": {
-                      "columnField": "День недели",
-                      "rowField": "Валюта",
-                      "valueField": "avg_change"
-                    }
-                  }
-                }
-              ],
-              "queryOptions": {}
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 95,
+            "tooltip": {
+              "field": "char_code\\day_of_week"
             }
           },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "table",
-            "version": "13.1.0",
-            "spec": {
-              "options": {
-                "cellHeight": "md",
-                "showHeader": true,
-                "sortBy": [
-                  {
-                    "desc": false,
-                    "displayName": "Пн"
-                  }
-                ]
+          "decimals": 2,
+          "noValue": "-",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
               },
-              "fieldConfig": {
-                "defaults": {
-                  "decimals": 2,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "continuous-GrYlRd"
-                  },
-                  "noValue": "-",
-                  "custom": {
-                    "align": "auto",
-                    "cellOptions": {
-                      "mode": "basic",
-                      "type": "color-background"
-                    },
-                    "footer": {
-                      "reducers": []
-                    },
-                    "inspect": false,
-                    "minWidth": 95,
-                    "tooltip": {
-                      "field": "char_code\\day_of_week"
-                    }
-                  }
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Пн"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 100
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Вт"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 100
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Ср"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 100
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Валюта\\День недели"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 175
-                      },
-                      {
-                        "id": "custom.align",
-                        "value": "center"
-                      },
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "transparent",
-                          "mode": "fixed"
-                        }
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Пт"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 95
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Сб"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 100
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Вс"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 100
-                      },
-                      {
-                        "id": "custom.tooltip.field"
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "Чт"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 100
-                      }
-                    ]
-                  }
-                ]
+              {
+                "color": "red",
+                "value": 80
               }
-            }
+            ]
           }
-        }
-      },
-      "panel-2": {
-        "kind": "Panel",
-        "spec": {
-          "id": 2,
-          "title": "Изменение курса за 30 дней, %",
-          "description": "",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "grafana-postgresql-datasource",
-                      "version": "v0",
-                      "datasource": {
-                        "uid": "currency_postgres"
-                      },
-                      "spec": {
-                        "dataset": "currency_db",
-                        "editorMode": "code",
-                        "format": "table",
-                        "rawQuery": true,
-                        "rawSql": "SELECT char_code, requested_date::DATE, daily_change_pct \r\nFROM finance_int.int_daily_rates\r\nWHERE requested_date >= NOW() - INTERVAL '30 days' \r\n  AND char_code IN ('USD', 'EUR', 'EGP', 'THB', 'TRY', 'VND')",
-                        "sql": {
-                          "columns": [
-                            {
-                              "parameters": [],
-                              "type": "function"
-                            }
-                          ],
-                          "groupBy": [
-                            {
-                              "property": {
-                                "type": "string"
-                              },
-                              "type": "groupBy"
-                            }
-                          ],
-                          "limit": 50
-                        }
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [
-                {
-                  "kind": "Transformation",
-                  "group": "partitionByValues",
-                  "spec": {
-                    "options": {
-                      "fields": [
-                        "char_code"
-                      ],
-                      "keepFields": false
-                    }
-                  }
-                }
-              ],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "timeseries",
-            "version": "13.1.0",
-            "spec": {
-              "options": {
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "legend": {
-                  "calcs": [
-                    "first",
-                    "last",
-                    "min",
-                    "max"
-                  ],
-                  "displayMode": "table",
-                  "enableFacetedFilter": false,
-                  "overflow": "ellipsis",
-                  "placement": "right",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "single",
-                  "sort": "none"
-                }
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "decimals": 2,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 1,
-                    "pointSize": 1,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "auto",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  }
-                },
-                "overrides": []
-              }
-            }
-          }
-        }
-      },
-      "panel-3": {
-        "kind": "Panel",
-        "spec": {
-          "id": 3,
-          "title": "Детальные данные",
-          "description": " 7 последних дней",
-          "links": [],
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "grafana-postgresql-datasource",
-                      "version": "v0",
-                      "datasource": {
-                        "uid": "currency_postgres"
-                      },
-                      "spec": {
-                        "dataset": "currency_db",
-                        "editorMode": "code",
-                        "format": "table",
-                        "rawQuery": true,
-                        "rawSql": "SELECT * FROM finance_marts.dm_weekly_report\r\nORDER BY requested_date DESC, char_code ASC",
-                        "sql": {
-                          "columns": [
-                            {
-                              "parameters": [],
-                              "type": "function"
-                            }
-                          ],
-                          "groupBy": [
-                            {
-                              "property": {
-                                "type": "string"
-                              },
-                              "type": "groupBy"
-                            }
-                          ],
-                          "limit": 50
-                        }
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                }
-              ],
-              "transformations": [
-                {
-                  "kind": "Transformation",
-                  "group": "formatTime",
-                  "spec": {
-                    "options": {
-                      "outputFormat": "DD.MM.YYYY",
-                      "timeField": "requested_date",
-                      "useTimezone": true
-                    }
-                  }
-                }
-              ],
-              "queryOptions": {}
-            }
-          },
-          "vizConfig": {
-            "kind": "VizConfig",
-            "group": "table",
-            "version": "13.1.0",
-            "spec": {
-              "options": {
-                "cellHeight": "sm",
-                "showHeader": true,
-                "sortBy": []
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "decimals": 3,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "custom": {
-                    "align": "auto",
-                    "cellOptions": {
-                      "type": "auto"
-                    },
-                    "footer": {
-                      "reducers": []
-                    },
-                    "inspect": false,
-                    "tooltip": {
-                      "field": "char_code"
-                    }
-                  }
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "char_code"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 103
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "rate"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 80
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "prev_date_rate"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 120
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "daily_change_pct"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 137
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "avg_rate_7d"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 127
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "week_min_rate"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 122
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "scope": "series",
-                      "options": "week_max_rate"
-                    },
-                    "properties": [
-                      {
-                        "id": "custom.width",
-                        "value": 119
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "layout": {
-      "kind": "GridLayout",
-      "spec": {
-        "items": [
+        },
+        "overrides": [
           {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 0,
-              "y": 0,
-              "width": 24,
-              "height": 10,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-1"
+            "matcher": {
+              "id": "byName",
+              "options": "Пн",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
               }
-            }
+            ]
           },
           {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 0,
-              "y": 10,
-              "width": 24,
-              "height": 9,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-2"
+            "matcher": {
+              "id": "byName",
+              "options": "Вт",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
               }
-            }
+            ]
           },
           {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 0,
-              "y": 19,
-              "width": 24,
-              "height": 9,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-3"
+            "matcher": {
+              "id": "byName",
+              "options": "Ср",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
               }
-            }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Валюта\\День недели",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 175
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Пт",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 95
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Сб",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Вс",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.tooltip.field",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Чт",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
           }
         ]
-      }
-    },
-    "links": [],
-    "liveNow": false,
-    "preload": false,
-    "tags": [],
-    "timeSettings": {
-      "timezone": "browser",
-      "from": "now-30d",
-      "to": "now",
-      "autoRefresh": "1d",
-      "autoRefreshIntervals": [
-        "5s",
-        "10s",
-        "30s",
-        "1m",
-        "5m",
-        "15m",
-        "30m",
-        "1h",
-        "2h",
-        "1d"
-      ],
-      "hideTimepicker": false,
-      "fiscalYearStartMonth": 0
-    },
-    "title": "Анализ нескольких валют",
-    "variables": [],
-    "preferences": {
-      "layout": {
-        "kind": "GridLayout",
-        "spec": {
-          "items": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "md",
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Пн"
+          }
+        ]
+      },
+      "pluginVersion": "13.1.0",
+      "targets": [
+        {
+          "dataset": "currency_db",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "currency_postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    char_code AS \"Валюта\",\r\n    CASE EXTRACT(dow FROM requested_date) \r\n      WHEN 0 THEN 'Вс'\r\n      WHEN 1 THEN 'Пн'\r\n      WHEN 2 THEN 'Вт'\r\n      WHEN 3 THEN 'Ср'\r\n      WHEN 4 THEN 'Чт'\r\n      WHEN 5 THEN 'Пт'\r\n      WHEN 6 THEN 'Сб'\r\n    END AS \"День недели\",\r\n    AVG(daily_change_pct) AS avg_change\r\nFROM finance_int.int_daily_rates\r\nWHERE requested_date >= NOW() - INTERVAL '90 days'\r\n  AND char_code IN ('USD', 'EUR', 'EGP', 'THB', 'TRY', 'VND')\r\nGROUP BY char_code, EXTRACT(dow FROM requested_date)\r\nORDER BY char_code,\r\n         CASE EXTRACT(dow FROM requested_date)\r\n         WHEN 0 THEN 7\r\n         ELSE EXTRACT(dow FROM requested_date)\r\n         END;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
         }
-      }
+      ],
+      "title": "Тепловая карта изменения курса валют",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "День недели",
+            "rowField": "Валюта",
+            "valueField": "avg_change"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "currency_postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
+        },
+        "legend": {
+          "calcs": [
+            "first",
+            "last",
+            "min",
+            "max"
+          ],
+          "displayMode": "table",
+          "enableFacetedFilter": false,
+          "overflow": "ellipsis",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "13.1.0",
+      "targets": [
+        {
+          "dataset": "currency_db",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "currency_postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT char_code, requested_date::DATE, daily_change_pct \r\nFROM finance_int.int_daily_rates\r\nWHERE requested_date >= NOW() - INTERVAL '30 days' \r\n  AND char_code IN ('USD', 'EUR', 'EGP', 'THB', 'TRY', 'VND')",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Изменение курса за 30 дней, %",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "char_code"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "currency_postgres"
+      },
+      "description": " 7 последних дней",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "tooltip": {
+              "field": "char_code"
+            }
+          },
+          "decimals": 3,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "char_code",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 103
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rate",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "prev_date_rate",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "daily_change_pct",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 137
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "avg_rate_7d",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 127
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "week_min_rate",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 122
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "week_max_rate",
+              "scope": "series"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 119
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "13.1.0",
+      "targets": [
+        {
+          "dataset": "currency_db",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "currency_postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM finance_marts.dm_weekly_report\r\nORDER BY requested_date DESC, char_code ASC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Детальные данные",
+      "transformations": [
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "DD.MM.YYYY",
+            "timeField": "requested_date",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "table"
     }
-  }
+  ],
+  "preload": false,
+  "refresh": "1d",
+  "schemaVersion": 42,
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Анализ нескольких валют",
+  "uid": "ad6xw2p"
 }

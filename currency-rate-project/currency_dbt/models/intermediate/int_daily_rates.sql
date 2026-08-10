@@ -13,15 +13,23 @@ WITH prev_val AS (
 	value,
 	rate,
 	LAG(rate) OVER(
-	   PARTITION BY char_code 
+	   PARTITION BY char_code
 	   ORDER BY requested_date
-	) AS prev_date_rate
+	) AS prev_date_rate,
+	LAG(requested_date) OVER(
+	   PARTITION BY char_code
+	   ORDER BY requested_date
+	) AS prev_requested_date
   FROM {{ ref('stg_currency_rates') }}
 )
-SELECT 
+SELECT
 *,
+-- считаем только если предыдущая строка - буквально вчера.
+-- при пропущенной загрузке LAG берет позавчера, и изменение
+-- за двое суток нельзя выдавать за дневное: оно пробьет порог алерта
 CASE
-  WHEN prev_date_rate IS NOT NULL 
+  WHEN prev_date_rate IS NOT NULL
+   AND requested_date - prev_requested_date = 1
   THEN ROUND((rate - prev_date_rate) / prev_date_rate * 100, 2)
   ELSE NULL
 END AS daily_change_pct,

@@ -40,7 +40,7 @@ services:
       REPORT_MAIL_TO: ${MAIL_TO}
       # переменные для dbt
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PWD}
+      DB_PWD: ${DB_PWD}
       DB_NAME: ${DB_NAME} 
     volumes:
       - ./src:/opt/airflow/src
@@ -51,7 +51,7 @@ services:
     command: >
       bash -c "cd /opt/airflow/currency_dbt && dbt deps &&
       airflow db migrate &&
-      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
+      (airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true) &&
       airflow webserver
       "
     restart: unless-stopped
@@ -70,7 +70,7 @@ services:
       # переменные для dbt
       DBT_PROFILES_DIR: /opt/airflow/currency_dbt
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PWD}
+      DB_PWD: ${DB_PWD}
       DB_NAME: ${DB_NAME}
     volumes:
       - ./src:/opt/airflow/src
@@ -80,6 +80,7 @@ services:
       - ./airflow/reports:/opt/airflow/reports/
     command: >
       bash -c "cd /opt/airflow/currency_dbt && dbt deps &&
+      airflow db check-migrations --migration-wait-timeout=120 &&
       airflow scheduler
       "
     restart: unless-stopped
@@ -101,6 +102,9 @@ services:
       GF_SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
       GF_SMTP_FROM_NAME: ${SMTP_FROM_NAME}
       GF_SMTP_SKIP_VERIFY: "true"
+      # пароли пользователей БД для датасорсов, подставляются в provisioning
+      GRAFANA_PWD: ${GRAFANA_PWD}
+      AIRFLOW_READER_PWD: ${AIRFLOW_READER_PWD}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning

@@ -3,7 +3,7 @@
 '''
 from datetime import date
 
-from .api_client import build_url
+from elt.api_client import build_url
 
 
 def test_url_without_date():

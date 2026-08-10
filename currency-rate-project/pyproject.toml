@@ -37,6 +37,8 @@ known-first-party = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# чтобы тесты импортировали elt.* так же, как это делает DAG в контейнере
+pythonpath = ["src"]
 
 [dependency-groups]
 dev = [

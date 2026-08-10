@@ -5,9 +5,9 @@ currency_dbt:
       threads: 1
       host: localhost
       port: 5432
-      user: currency_user
-      password: currency_pass
-      dbname: currency_db
+      user: "{{ env_var('DB_USER') }}"
+      password: "{{ env_var('DB_PWD') }}"
+      dbname: "{{ env_var('DB_NAME') }}"
       schema: dev_finance
     
     prod:
@@ -15,9 +15,9 @@ currency_dbt:
       threads: 4
       host: postgres
       port: 5432
-      user: currency_user
-      password: currency_pass
-      dbname: currency_db
+      user: "{{ env_var('DB_USER') }}"
+      password: "{{ env_var('DB_PWD') }}"
+      dbname: "{{ env_var('DB_NAME') }}"
       schema: finance
       
   target: dev
