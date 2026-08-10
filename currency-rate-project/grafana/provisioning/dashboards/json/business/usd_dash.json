@@ -363,7 +363,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  to_char(requested_date, 'dd.mm.yyyy') as \"Дата\", \r\n  CASE EXTRACT(dow FROM requested_date)\r\n   WHEN 0 THEN 'Вс'\r\n\t WHEN 1 THEN 'Пн'\r\n\t WHEN 2 THEN 'Вт'\r\n\t WHEN 3 THEN 'Ср'\r\n\t WHEN 4 THEN 'Чт'\r\n\t WHEN 5 THEN 'Пт'\r\n\t ELSE 'Сб'\r\n  END AS \"День недели\",\r\n  daily_change_pct \"Изменение, %\"\r\nFROM finance_int.int_daily_rates\r\nWHERE char_code = 'USD' \r\n  AND requested_date >= NOW() - INTERVAL '90' DAY\r\nORDER BY ABS(daily_change_pct) DESC, requested_date DESC\r\nLIMIT 5",
+          "rawSql": "SELECT\r\n  to_char(requested_date, 'dd.mm.yyyy') as \"Дата\", \r\n  CASE EXTRACT(dow FROM requested_date)\r\n   WHEN 0 THEN 'Вс'\r\n\t WHEN 1 THEN 'Пн'\r\n\t WHEN 2 THEN 'Вт'\r\n\t WHEN 3 THEN 'Ср'\r\n\t WHEN 4 THEN 'Чт'\r\n\t WHEN 5 THEN 'Пт'\r\n\t ELSE 'Сб'\r\n  END AS \"День недели\",\r\n  daily_change_pct \"Изменение, %\"\r\nFROM finance_int.int_daily_rates\r\nWHERE char_code = 'USD' \r\n  AND requested_date >= NOW() - INTERVAL '90' DAY\r\n  AND daily_change_pct IS NOT NULL\r\nORDER BY ABS(daily_change_pct) DESC, requested_date DESC\r\nLIMIT 5",
           "refId": "usd_table",
           "sql": {
             "columns": [
