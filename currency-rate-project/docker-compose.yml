@@ -120,6 +120,21 @@ services:
       - "5050:80"
     restart: unless-stopped
 
+  bi-init:
+    profiles: ["bi"]
+    image: postgres:15
+    container_name: cur_bi_init
+    environment:
+      PGPASSWORD: ${DB_PWD}
+    depends_on: 
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./sql/init_bi.sql:/docker-entrypoint-initdb.d/init_bi.sql
+    command: >
+      bash -c "psql -h postgres -U ${DB_USER} -d ${DB_NAME} -v bi_pwd=${BI_READER_PWD} -f ./docker-entrypoint-initdb.d/init_bi.sql"
+    restart: no
+
 volumes:
   currency_pgdata:
   grafana_data:
