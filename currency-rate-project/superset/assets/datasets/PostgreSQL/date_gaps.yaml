@@ -1,0 +1,85 @@
+table_name: date_gaps
+main_dttm_col: calenda
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+catalog: currency_db
+schema: raw
+sql: "SELECT\n  calenda::DATE,\n  EXTRACT(ISODOW FROM calenda::TIMESTAMP) AS weekday,\n\
+  \  request_date IS NULL AS is_missed,\n  CASE \n    WHEN EXTRACT(ISODOW FROM calenda::TIMESTAMP)\
+  \ <= 5\n    THEN '\u0431\u0443\u0434\u043D\u0438\u0439'\n    ELSE '\u0432\u044B\u0445\
+  \u043E\u0434\u043D\u043E\u0439' \n  END AS day_type\nFROM generate_series(\n   \
+  \   (SELECT MIN(request_date) FROM raw.currency_rates_raw)::DATE, \n      CURRENT_DATE\
+  \ - INTERVAL '1' DAY, \n      '1 day') AS calenda\nLEFT JOIN raw.currency_rates_raw\
+  \ ON request_date = calenda::DATE"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: 1e720447-c1cd-442e-b9db-1118ef62302b
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: weekday
+  verbose_name: "\u0414\u0435\u043D\u044C \u043D\u0435\u0434\u0435\u043B\u0438"
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: day_type
+  verbose_name: "\u0422\u0438\u043F \u0434\u043D\u044F"
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: is_missed
+  verbose_name: "\u041F\u0440\u043E\u043F\u0443\u0441\u043A"
+  is_dttm: false
+  is_active: true
+  type: BOOLEAN
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: calenda
+  verbose_name: "\u0414\u0430\u0442\u0430"
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+version: 1.0.0
+database_uuid: bbeb1773-e825-4c8a-ab59-4ef520d88164

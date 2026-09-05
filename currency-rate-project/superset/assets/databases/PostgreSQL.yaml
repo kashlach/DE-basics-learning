@@ -1,0 +1,14 @@
+database_name: PostgreSQL
+sqlalchemy_uri: postgresql://bireader:XXXXXX@postgres/currency_db
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  allows_virtual_table_explore: true
+impersonate_user: false
+uuid: bbeb1773-e825-4c8a-ab59-4ef520d88164
+version: 1.0.0

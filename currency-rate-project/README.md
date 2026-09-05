@@ -13,7 +13,7 @@
 * **pytest** для тестирования python кода
 * **Dockerfile** для создания образа Airflow с dbt
 * **dbt** для трансформации данных в хранилище
-* **grafana** для визуализации полученных данных
+* **grafana** и **superset** для визуализации полученных данных
 
 ### Как это работает (общая схема)
 
@@ -26,63 +26,74 @@ PostgreSQL raw слой (тут сырой ответ в JSONB)
 ↓
 dbt: staging → intermediate → marts
 ↓
-дашборды в графане / отчет и алерт на почту
+дашборды в графане и superset/ отчет и алерт на почту
 ```
 
-**Стек:** python 3.11+ (uv, ruff), airflow, dbt, postgres (jsonb), sqlite (для разработки без docker), grafana
+**Стек:** python 3.11+ (uv, ruff), airflow, dbt, postgres (jsonb), sqlite (для разработки без docker), grafana, superset 5.0.0
 
 ### Структура проекта
 
 ```text
 currency-rate-project/
-├── airflow/
-│  ├── dags/
-│  │  └── currency_pipeline.py  # dag
-│  └── reports/                 # еженедельные excel отчеты
-│     └── svod_auto_report.xlsx # PQ-шаблон для сборки сводного отчета
-├── currency_dbt/               # dbt проект
-│  ├── dbt_project.yml
-│  ├── packages.yml             # dbt-utils макросы для тестирования данных
-│  ├── profiles.yml
-│  └── models/
-│     ├── staging/
-│     ├── intermediate/
-│     └── marts/ 
-├── grafana/provisioning/
-│  ├── alerting/
-│  │  ├── contact_points.yaml
-│  │  ├── policies.yaml
-│  │  └── alert_rules.yaml
-│  ├── dashboards/
-│  │  ├── dashboards.yml
-│  │  └── json/                 # json дашбордов, автоматически импортируются в графану
-│  │     ├── business/          # бизнес-дашборды
-│  │     │  ├── currency_dash.json
-│  │     │  ├── usd_dash.json
-│  │     │  └── thb_dash.json
-│  │     └── tech/              # технические дашборды
-│  │        └── etl_monitoring.json
-│  └── datasources/
-│     └── postgres.yaml
-├── src/elt/
-│  ├── api_client.py            # запросы курсов с ретраями
-│  ├── xml_converter.py         # xml в json
-│  ├── loader.py                # upsert в БД
-│  ├── config.py                # константы
-│  └── run.py                   # ручной запуск для отладки
-├── tests/
-│  ├── test_api_client.py
-│  └── test_loader.py
-├── sql/
-│  ├── init_airflow_db.sql
-│  ├── init_airflow_reader.sql
-│  └── init_grafana_user.sql
-├── screenshots/
-├── Dockerfile                 # образ airflow:2.9.3 + dbt-postgres
-├── docker-compose.yml         # postgres, airflow, pgadmin, grafana
-├── pyproject.toml             # зависимости (uv)
-├── .env.example
-└── README.md
+├─ airflow/
+│   ├── dags/
+│   │  └── currency_pipeline.py  # dag
+│   └── reports/                 # еженедельные excel отчеты
+│      └── svod_auto_report.xlsx # PQ-шаблон для сборки сводного отчета
+├─ currency_dbt/                 # dbt проект
+│   ├── dbt_project.yml
+│   ├── packages.yml             # dbt-utils макросы
+│   ├── profiles.yml
+│   └── models/
+│      ├── staging/
+│      ├── intermediate/
+│      └── marts/ 
+├─ grafana/provisioning/
+│   ├── alerting/
+│   │  ├── contact_points.yaml
+│   │  ├── policies.yaml
+│   │  └── alert_rules.yaml
+│   ├── dashboards/
+│   │  ├── dashboards.yml
+│   │  └── json/                 # json дашбордов
+│   │     ├── business/          # бизнес-дашборды
+│   │     │  ├── currency_dash.json
+│   │     │  ├── usd_dash.json
+│   │     │  └── thb_dash.json
+│   │     └── tech/              # технические дашборды
+│   │        └── etl_monitoring.json
+│   └── datasources/
+│      └── postgres.yaml
+├─ src/elt/
+│   ├── api_client.py            # запросы курсов с ретраями
+│   ├── xml_converter.py         # xml в json
+│   ├── loader.py                # upsert в БД
+│   ├── config.py                # константы
+│   └── run.py                   # ручной запуск для отладки
+├─ tests/
+│   ├── test_api_client.py
+│   └── test_loader.py
+├─ sql/
+│   ├── init_airflow_db.sql
+│   ├── init_airflow_reader.sql
+│   ├── init_grafana_user.sql
+│   └── init_bi.sql
+├─ superset/
+│   ├── assets/
+│   │  ├── charts/
+│   │  ├── dashboards/
+│   │  ├── datasets/
+│   │  ├── databases/
+│   │  └── metadata.yaml
+│   ├── bootstrap.sh          # скрипт инициализации
+│   └── superset_config.py    # конфигурация superset
+├─ screenshots/
+├─ Dockerfile                 # airflow:2.9.3 + dbt-postgres
+├─ Dockerfile.superset        # superset 5.0.0 + psycopg2-binary
+├─ docker-compose.yml         # postgres, airflow, pgadmin, grafana, superset
+├─ pyproject.toml             # зависимости (uv)
+├─ .env.example
+└─ README.md
 ```
 ##### Схема DAG и статусы тасков
 ![Схема DAG](screenshots/currency_pipeline_dag.PNG)
@@ -113,7 +124,10 @@ uv sync
 docker build -t my-airflow-with-dbt .
 
 # 5. Запускаем контейнеры
+# базовый сценарий без BI
 docker-compose up -d
+# базовые сервисы + BI (bi-init и superset)
+docker-compose --profile bi up -d
 ```
 После запуска:
 
@@ -122,6 +136,7 @@ docker-compose up -d
 |Airflow	|http://localhost:8080	|admin / admin|
 |Grafana	|http://localhost:3000	|admin / admin|
 |pgAdmin	|http://localhost:5050	|admin@example.com / admin|
+|Superset	|http://localhost:8088	|admin / admin|
 
 В Airflow включаем DAG currency_pipeline. Он настроен на ежедневное выполнение в 10:00 UTC.
 
@@ -190,6 +205,17 @@ Disable TLS: проставить галочку
 Также настроен **алерт**, который срабатывает, если последний успешный запуск дага `currency_pipeline` был более 24 часов назад, с уведомлением на email (замените адрес почты recipient_login@example.com в `grafana/provisioning/alerting/contact_points.yaml` на нужный).
 
 ---
+#####  Мониторинг качества данных
+
+Дашборд Superset для аналитики качества загружаемых данных. Источник данных: БД с курсами валют.
+
+![DQ check dashboard](screenshots/superset_dq_check.jpg)
+
+Этот дашборд смотрит на *сами данные*, тогда как [Мониторинг состояния ETL](#мониторинг-состояния-etl) смотрит на метабазу airflow (статусы `dag_run`): dag может отработать успешно, но при этом залить неполные данные.
+
+Для импорта дашборда нужно заменить `XXXXXX` в строке подключения к БД `sqlalchemy_uri` на пароль для роли `bireader` в `superset/assets/databases/PostgreSQL.yaml`.
+
+---
 #####  Тесты
 
 test_api_client.py - проверка URL и формата даты
@@ -203,21 +229,36 @@ uv run pytest tests/ -v
 ---
 ###  Что можно улучшить
 
-* <u>инкрементальные модели dbt</u>
+* <ins>инкрементальные модели dbt</ins>
+  
   сейчас тип материализации `table`, т.к. данных мало (~20 тыс строк в год), при росте может иметь смысл перевести на `incremental` чтобы не пересобирать таблицы каждый день
+
 * ~~добавить дашборд в графане для мониторинга elt на основе данных метабазы эйрфлоу~~
-* <u>вынести пароли графаны из `sql/init_*.sql`</u>
+
+* <ins>вынести пароли графаны из `sql/init_*.sql`</ins>
+  
   требует перевода init-скриптов в `.sh`, т.к. в `.sql` переменные окружения не подставляются
-* <u>добавить ISO-год к `week_num` в сводном отчете</u>
+
+* <ins>добавить ISO-год к `week_num` в сводном отчете</ins>
+  
   номера недель повторяются каждый год, поэтому при накоплении отчетов данные за недели разных годов будут суммироваться. Нужен именно `EXTRACT(ISOYEAR)`, то есть год, определяемый по системе нумерации недель, а не календарный, т.к. неделя на стыке годов может разделиться надвое
-* <u>добавить makefile</u>
-* <u>добавить больше тестов</u>
+
+* <ins>добавить makefile</ins>
+
+* <ins>добавить больше тестов</ins>
+
   например dbt-тесты на бизнес правила и `dbt source freshness` (в raw-слое уже есть уже есть `loaded_at`)
-* <u>автоматическая дозагрузка пропущенных дней</u>
+
+* <ins>автоматическая дозагрузка пропущенных дней</ins>
+
   добавить таск, который смотрит, каких дат за последние n дней не хватает в raw-слое, и дозагружает их
-* <u>учесть логику публикации курсов</u> (подумать, нужно ли)
+
+* <ins>учесть логику публикации курсов</ins> (подумать, нужно ли)
+
   в сб и вс ЦБ курсы не устанавливает, то есть курсы, опубликованные в пт, будут действовать в сб, вс и пн, а пн будут опубликованы уже новые курсы, которые будут действовать во вт. Таким образом, среднее за 7 дней `avg_rate_7d` учитывает субботний курс трижды; на дашборде с тепловой картой нули в пн и вс, хотя интуитивно ожидаешь в сб и вс
-* <u>добавить возможность исторической дозагрузки</u>
+
+* <ins>добавить возможность исторической дозагрузки</ins>
+
   имеется в виду реализация через другой запрос к api ЦБ с диапазоном дат или, в крайнем случае, прогон текущего скрипта в цикле
 
 Часть приведенных пунктов - итог [ревью кода с Claude Code, PR #2](https://github.com/kashlach/DE-basics-learning/pull/2), а точнее то, что в ходе ревью было отложено.
