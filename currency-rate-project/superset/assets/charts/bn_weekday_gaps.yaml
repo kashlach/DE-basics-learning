@@ -1,12 +1,14 @@
 slice_name: "\u041F\u0440\u043E\u043F\u0443\u0449\u0435\u043D\u043E \u0437\u0430\u0433\
-  \u0440\u0443\u0437\u043E\u043A \u0432 \u0431\u0443\u0434\u043D\u0438"
+  \u0440\u0443\u0437\u043E\u043A \u0432 \u0431\u0443\u0434\u043D\u0438 NEW"
 description: null
 certified_by: null
 certification_details: null
 viz_type: big_number
 params:
+  datasource: 3__table
   viz_type: big_number
-  x_axis: calenda
+  slice_id: 4
+  x_axis: dt
   time_grain_sqla: P1M
   metric:
     aggregate: null
@@ -19,17 +21,16 @@ params:
     sqlExpression: "SUM(CASE\n  WHEN is_missed AND weekday >= 5\n  THEN 1\n  ELSE\
       \ 0\nEND)"
   adhoc_filters:
-  - clause: WHERE
-    comparator: No filter
-    datasourceWarning: false
-    expressionType: SIMPLE
-    filterOptionName: filter_vxyiojaagz_j3g88mn2vgb
+  - expressionType: SIMPLE
+    subject: dt
+    operator: TEMPORAL_RANGE
+    comparator: Last month
+    clause: WHERE
+    sqlExpression: null
     isExtra: false
     isNew: false
-    operator: TEMPORAL_RANGE
-    operatorId: TEMPORAL_RANGE
-    sqlExpression: null
-    subject: calenda
+    datasourceWarning: false
+    filterOptionName: filter_24lw37mc8ll_l2wdj2lmdn9
   compare_lag: 1
   compare_suffix: "\u043E\u0442 \u043F\u0440\u0435\u0434. \u043C\u0435\u0441\u044F\
     \u0446\u0430"
@@ -49,42 +50,39 @@ params:
   rolling_type: None
   rolling_periods: ''
   extra_form_data: {}
-  dashboards:
-  - 1
-  annotation_layers: []
-query_context: "{\"datasource\":{\"id\":2,\"type\":\"table\"},\"force\":false,\"queries\"\
-  :[{\"filters\":[{\"col\":\"calenda\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"\
+  dashboards: []
+query_context: "{\"datasource\":{\"id\":3,\"type\":\"table\"},\"force\":false,\"queries\"\
+  :[{\"filters\":[{\"col\":\"dt\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"Last month\"\
   }],\"extras\":{\"time_grain_sqla\":\"P1M\",\"having\":\"\",\"where\":\"\"},\"applied_time_extras\"\
   :{},\"columns\":[{\"timeGrain\":\"P1M\",\"columnType\":\"BASE_AXIS\",\"sqlExpression\"\
-  :\"calenda\",\"label\":\"calenda\",\"expressionType\":\"SQL\"}],\"metrics\":[{\"\
-  aggregate\":null,\"column\":null,\"datasourceWarning\":false,\"expressionType\"\
-  :\"SQL\",\"hasCustomLabel\":false,\"label\":\"SUM(CASE\\n  WHEN is_missed AND weekday\
-  \ >= 5\\n  THEN 1\\n  ELSE 0\\nEND)\",\"optionName\":\"metric_5atl730jt0l_0yjbnj5ryabd\"\
+  :\"dt\",\"label\":\"dt\",\"expressionType\":\"SQL\"}],\"metrics\":[{\"aggregate\"\
+  :null,\"column\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"\
+  hasCustomLabel\":false,\"label\":\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\\
+  n  THEN 1\\n  ELSE 0\\nEND)\",\"optionName\":\"metric_5atl730jt0l_0yjbnj5ryabd\"\
   ,\"sqlExpression\":\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\n  THEN 1\\n\
   \  ELSE 0\\nEND)\"}],\"annotation_layers\":[],\"series_limit\":0,\"order_desc\"\
   :true,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{},\"post_processing\"\
-  :[{\"operation\":\"pivot\",\"options\":{\"index\":[\"calenda\"],\"columns\":[],\"\
-  aggregates\":{\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\n  THEN 1\\n  ELSE\
-  \ 0\\nEND)\":{\"operator\":\"mean\"}},\"drop_missing_columns\":true}},{\"operation\"\
-  :\"flatten\"}]}],\"form_data\":{\"datasource\":\"2__table\",\"viz_type\":\"big_number\"\
-  ,\"slice_id\":2,\"x_axis\":\"calenda\",\"time_grain_sqla\":\"P1M\",\"metric\":{\"\
-  aggregate\":null,\"column\":null,\"datasourceWarning\":false,\"expressionType\"\
-  :\"SQL\",\"hasCustomLabel\":false,\"label\":\"SUM(CASE\\n  WHEN is_missed AND weekday\
-  \ >= 5\\n  THEN 1\\n  ELSE 0\\nEND)\",\"optionName\":\"metric_5atl730jt0l_0yjbnj5ryabd\"\
-  ,\"sqlExpression\":\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\n  THEN 1\\n\
-  \  ELSE 0\\nEND)\"},\"adhoc_filters\":[{\"clause\":\"WHERE\",\"comparator\":\"No\
-  \ filter\",\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\",\"filterOptionName\"\
-  :\"filter_vxyiojaagz_j3g88mn2vgb\",\"isExtra\":false,\"isNew\":false,\"operator\"\
-  :\"TEMPORAL_RANGE\",\"operatorId\":\"TEMPORAL_RANGE\",\"sqlExpression\":null,\"\
-  subject\":\"calenda\"}],\"compare_lag\":1,\"compare_suffix\":\"\u043E\u0442 \u043F\
-  \u0440\u0435\u0434. \u043C\u0435\u0441\u044F\u0446\u0430\",\"show_timestamp\":true,\"\
-  show_trend_line\":true,\"start_y_axis_at_zero\":true,\"color_picker\":{\"a\":1,\"\
-  b\":135,\"g\":122,\"r\":0},\"header_font_size\":0.6,\"subheader_font_size\":0.15,\"\
-  y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"force_timestamp_formatting\"\
+  :[{\"operation\":\"pivot\",\"options\":{\"index\":[\"dt\"],\"columns\":[],\"aggregates\"\
+  :{\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\n  THEN 1\\n  ELSE 0\\nEND)\"\
+  :{\"operator\":\"mean\"}},\"drop_missing_columns\":true}},{\"operation\":\"flatten\"\
+  }]}],\"form_data\":{\"datasource\":\"3__table\",\"viz_type\":\"big_number\",\"slice_id\"\
+  :4,\"x_axis\":\"dt\",\"time_grain_sqla\":\"P1M\",\"metric\":{\"aggregate\":null,\"\
+  column\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\"\
+  :false,\"label\":\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\n  THEN 1\\n  ELSE\
+  \ 0\\nEND)\",\"optionName\":\"metric_5atl730jt0l_0yjbnj5ryabd\",\"sqlExpression\"\
+  :\"SUM(CASE\\n  WHEN is_missed AND weekday >= 5\\n  THEN 1\\n  ELSE 0\\nEND)\"},\"\
+  adhoc_filters\":[{\"expressionType\":\"SIMPLE\",\"subject\":\"dt\",\"operator\"\
+  :\"TEMPORAL_RANGE\",\"comparator\":\"Last month\",\"clause\":\"WHERE\",\"sqlExpression\"\
+  :null,\"isExtra\":false,\"isNew\":false,\"datasourceWarning\":false,\"filterOptionName\"\
+  :\"filter_24lw37mc8ll_l2wdj2lmdn9\"}],\"compare_lag\":1,\"compare_suffix\":\"\u043E\
+  \u0442 \u043F\u0440\u0435\u0434. \u043C\u0435\u0441\u044F\u0446\u0430\",\"show_timestamp\"\
+  :true,\"show_trend_line\":true,\"start_y_axis_at_zero\":true,\"color_picker\":{\"\
+  a\":1,\"b\":135,\"g\":122,\"r\":0},\"header_font_size\":0.6,\"subheader_font_size\"\
+  :0.15,\"y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"force_timestamp_formatting\"\
   :false,\"rolling_type\":\"None\",\"rolling_periods\":\"\",\"extra_form_data\":{},\"\
-  dashboards\":[1],\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"\
+  dashboards\":[],\"force\":false,\"result_format\":\"json\",\"result_type\":\"full\"\
   },\"result_format\":\"json\",\"result_type\":\"full\"}"
 cache_timeout: null
-uuid: f10291e8-e1f0-4f06-8dda-d65f0b2551b5
+uuid: e0eb31a9-4abe-4f97-8b99-19455c7b2699
 version: 1.0.0
 dataset_uuid: 1e720447-c1cd-442e-b9db-1118ef62302b

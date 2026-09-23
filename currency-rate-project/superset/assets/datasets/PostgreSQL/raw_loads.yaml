@@ -6,7 +6,7 @@ offset: 0
 cache_timeout: null
 catalog: currency_db
 schema: raw
-sql: "SELECT \n  request_date,\n  loaded_at,\n  (SELECT COUNT(*) FROM jsonb_object_keys(raw_json->'Valute'))\
+sql: "SELECT \n  request_date AS dt,\n  loaded_at,\n  (SELECT COUNT(*) FROM jsonb_object_keys(raw_json->'Valute'))\
   \ AS currency_cnt,\n  loaded_at::DATE - request_date AS lag_days\nFROM currency_rates_raw "
 params: null
 template_params: null
@@ -29,20 +29,6 @@ metrics:
     warning_markdown: ''
   warning_text: null
 columns:
-- column_name: request_date
-  verbose_name: "\u0414\u0430\u0442\u0430, \u043D\u0430 \u043A\u043E\u0442\u043E\u0440\
-    \u0443\u044E \u0437\u0430\u043F\u0440\u043E\u0441\u0438\u043B\u0438 \u043A\u0443\
-    \u0440\u0441"
-  is_dttm: true
-  is_active: true
-  type: DATE
-  advanced_data_type: null
-  groupby: true
-  filterable: true
-  expression: ''
-  description: null
-  python_date_format: null
-  extra: {}
 - column_name: currency_cnt
   verbose_name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0432\
     \u0430\u043B\u044E\u0442 \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0426\u0411"
@@ -79,6 +65,18 @@ columns:
   groupby: true
   filterable: true
   expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: dt
+  verbose_name: "\u0414\u0430\u0442\u0430"
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
   description: null
   python_date_format: null
   extra: {}

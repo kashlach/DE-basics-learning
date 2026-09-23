@@ -1,9 +1,9 @@
 ## DE-basics-learning
 
-Репозиторий с учебными проектами по направлению Data Engineering. Содержит последовательную серию практических работ - от основ ETL на Python до полноценного пайплайна с Airflow, dbt и Grafana.
+Репозиторий с учебными проектами по направлению Data Engineering. Содержит последовательную серию практических работ - от основ ETL на Python до полноценного пайплайна с Airflow, dbt,Grafana и Superset.
 
 #### О себе
-**Текущий опыт**: 3 года PL+ и PL/SQL разработчиком + 8 месяцев в роли аналитика (работа с отчетностью).
+**Текущий опыт**: 3 года PL+ и PL/SQL разработчиком + 9 месяцев в роли аналитика (работа с отчетностью).
 
 **Ключевые навыки из коммерческого опыта**:
 
@@ -33,7 +33,8 @@ DE-basics-learning/
     ├── src/elt/                         # elt на python
     ├── currency_dbt/                    # dbt-трансформации
     ├── airflow/                         # даг с оркестрацией
-    ├── grafana/                         # дашборды и алерт  
+    ├── grafana/                         # дашборды и алерт
+    ├── superset/                        # дашборд
     ├── tests/                           # тесты
     └── docker-compose.yml               # инфраструктура
 ```
@@ -114,7 +115,7 @@ DE-basics-learning/
 **Схема работы**:
 
 ```text
-API ЦБ РФ → Airflow DAG → PostgreSQL (raw, JSONB) → dbt (staging → intermediate → marts) → Grafana дашборды + Excel-отчеты + Email-алерты
+API ЦБ РФ → Airflow DAG → PostgreSQL (raw, JSONB) → dbt (staging → intermediate → marts) → Grafana и Superset дашборды + Excel-отчеты + Email-алерты
 ```
 
 **Освоено**:
@@ -125,6 +126,7 @@ API ЦБ РФ → Airflow DAG → PostgreSQL (raw, JSONB) → dbt (staging → i
 - **Dockerfile** - создание образа Airflow с dbt
 - **dbt** - трансформация данных в хранилище (модели, тесты, документация)
 - **Grafana** - визуализация данных и настройка алертов
+- **Superset** - визуализация данных
 - Excel-отчетность - еженедельные отчеты, автоматическая отправка на почту
 - Мониторинг ETL - дашборд Healthcheck на основе метабазы Airflow
 
@@ -137,6 +139,7 @@ API ЦБ РФ → Airflow DAG → PostgreSQL (raw, JSONB) → dbt (staging → i
 - Grafana дашборды:
   - Бизнес-дашборды: курсы валют (USD, THB и общий)
   - Технический дашборд: ETL Healthcheck с алертом при простое >24 часов
+- Superset дашборд для анализа качества данных в БД
 - Отчетность:
   - Еженедельный Excel-отчет (автоматически по понедельникам, отправка на почту)
   - Сводный отчет через Power Query
@@ -154,7 +157,7 @@ API ЦБ РФ → Airflow DAG → PostgreSQL (raw, JSONB) → dbt (staging → i
 |Базы данных|	PostgreSQL, Oracle|
 |Оркестрация|	Apache Airflow|
 |Трансформация|	dbt|
-|Визуализация|	Grafana, MS Report Builder, Oracle Repors Builder|
+|Визуализация|	Grafana, MS Report Builder, Oracle Repors Builder, Superset|
 |Контейнеризация|	Docker, Docker Compose|
 |Работа с данными|	pandas, SQLAlchemy, JSON/JSONB|
 |Тестирование|	pytest|
@@ -172,7 +175,7 @@ API ЦБ РФ → Airflow DAG → PostgreSQL (raw, JSONB) → dbt (staging → i
 - отчеты были *понятными* (интерактивные дашборды, документация)
 - процесс был *автоматизированным* (рассылки, самообслуживание)
 
-**Ключевой результат**: сформировано понимание архитектуры современных data-платформ и получены навыки работы с инструментами DE - Airflow, dbt, Docker, PostgreSQL, Grafana.
+**Ключевой результат**: сформировано понимание архитектуры современных data-платформ и получены навыки работы с инструментами DE и BI - Airflow, dbt, Docker, PostgreSQL, Grafana, Superset.
 
 #### Что дальше? Зоны роста по пунктам
 

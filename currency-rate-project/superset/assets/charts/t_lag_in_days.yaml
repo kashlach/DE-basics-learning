@@ -1,52 +1,43 @@
 slice_name: "\u041B\u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438,\
-  \ \u0434\u043D\u0435\u0439"
+  \ \u0434\u043D\u0435\u0439 NEW"
 description: null
 certified_by: null
 certification_details: null
 viz_type: table
 params:
+  datasource: 2__table
   viz_type: table
+  slice_id: 2
   query_mode: aggregate
   groupby:
   - lag_days
   temporal_columns_lookup:
-    request_date: true
+    dt: true
     loaded_at: true
   metrics:
-  - aggregate: COUNT
-    column:
-      advanced_data_type: null
-      changed_on: '2026-09-02T08:21:44.349272'
-      column_name: request_date
-      created_on: '2026-09-02T08:21:44.244873'
-      description: null
-      expression: ''
-      extra: '{"warning_markdown":null}'
-      filterable: true
-      groupby: true
-      id: 27
-      is_active: true
-      is_dttm: true
-      python_date_format: null
-      type: DATE
-      type_generic: 2
-      uuid: 39798550-2927-424a-a77c-d2144cfe7667
-      verbose_name: null
+  - expressionType: SQL
+    sqlExpression: COUNT(dt)
+    column: null
+    aggregate: null
     datasourceWarning: false
-    expressionType: SIMPLE
     hasCustomLabel: true
     label: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\u043D\
       \u0435\u0439"
-    optionName: metric_w0irg2tqfck_nzf3ytndxa
-    sqlExpression: null
+    optionName: metric_btu9g05k8t9_ph9ryakrfb
   all_columns: []
   percent_metrics: []
   adhoc_filters:
-  - clause: WHERE
-    comparator: No filter
-    expressionType: SIMPLE
+  - expressionType: SIMPLE
+    subject: dt
     operator: TEMPORAL_RANGE
-    subject: request_date
+    operatorId: TEMPORAL_RANGE
+    comparator: Last month
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_ijouammfpy_34nzs7bq0k2
   timeseries_limit_metric:
     aggregate: MIN
     column:
@@ -77,64 +68,35 @@ params:
   order_by_cols: []
   order_desc: false
   row_limit: 1000
+  server_page_length: 10
   show_totals: false
   table_timestamp_format: smart_date
   allow_render_html: true
   show_cell_bars: true
   color_pn: true
+  comparison_color_scheme: Green
   conditional_formatting: []
   comparison_type: values
   extra_form_data: {}
   dashboards:
-  - 1
-  annotation_layers: []
-query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\"\
-  :[{\"filters\":[{\"col\":\"request_date\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No\
-  \ filter\"}],\"extras\":{\"having\":\"\",\"where\":\"\"},\"applied_time_extras\"\
-  :{},\"columns\":[\"lag_days\"],\"metrics\":[{\"aggregate\":\"COUNT\",\"column\"\
-  :{\"advanced_data_type\":null,\"changed_on\":\"2026-09-02T08:21:44.349272\",\"column_name\"\
-  :\"request_date\",\"created_on\":\"2026-09-02T08:21:44.244873\",\"description\"\
-  :null,\"expression\":\"\",\"extra\":\"{\\\"warning_markdown\\\":null}\",\"filterable\"\
-  :true,\"groupby\":true,\"id\":27,\"is_active\":true,\"is_dttm\":true,\"python_date_format\"\
-  :null,\"type\":\"DATE\",\"type_generic\":2,\"uuid\":\"39798550-2927-424a-a77c-d2144cfe7667\"\
-  ,\"verbose_name\":null},\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\"\
-  ,\"hasCustomLabel\":true,\"label\":\"\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\
-  \u0432\u043E \u0434\u043D\u0435\u0439\",\"optionName\":\"metric_w0irg2tqfck_nzf3ytndxa\"\
-  ,\"sqlExpression\":null}],\"orderby\":[[{\"aggregate\":\"MIN\",\"column\":{\"advanced_data_type\"\
-  :null,\"certification_details\":null,\"certified_by\":null,\"column_name\":\"lag_days\"\
-  ,\"description\":null,\"expression\":\"\",\"filterable\":true,\"groupby\":true,\"\
-  id\":30,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"\
-  type\":\"INTEGER\",\"type_generic\":0,\"verbose_name\":\"\u041B\u0430\u0433 \u0437\
-  \u0430\u0433\u0440\u0443\u0437\u043A\u0438, \u0434\u043D\u0435\u0439\",\"warning_markdown\"\
-  :null},\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\",\"hasCustomLabel\"\
-  :false,\"label\":\"MIN(\u041B\u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\
-  \u0438, \u0434\u043D\u0435\u0439)\",\"optionName\":\"metric_800uecf2exg_0j3ai541tgfn\"\
-  ,\"sqlExpression\":null},true]],\"annotation_layers\":[],\"row_limit\":1000,\"series_limit\"\
-  :0,\"series_limit_metric\":{\"aggregate\":\"MIN\",\"column\":{\"advanced_data_type\"\
-  :null,\"certification_details\":null,\"certified_by\":null,\"column_name\":\"lag_days\"\
-  ,\"description\":null,\"expression\":\"\",\"filterable\":true,\"groupby\":true,\"\
-  id\":30,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"\
-  type\":\"INTEGER\",\"type_generic\":0,\"verbose_name\":\"\u041B\u0430\u0433 \u0437\
-  \u0430\u0433\u0440\u0443\u0437\u043A\u0438, \u0434\u043D\u0435\u0439\",\"warning_markdown\"\
-  :null},\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\",\"hasCustomLabel\"\
-  :false,\"label\":\"MIN(\u041B\u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\
-  \u0438, \u0434\u043D\u0435\u0439)\",\"optionName\":\"metric_800uecf2exg_0j3ai541tgfn\"\
-  ,\"sqlExpression\":null},\"order_desc\":false,\"url_params\":{},\"custom_params\"\
-  :{},\"custom_form_data\":{},\"post_processing\":[],\"time_offsets\":[]}],\"form_data\"\
-  :{\"datasource\":\"1__table\",\"viz_type\":\"table\",\"slice_id\":6,\"query_mode\"\
-  :\"aggregate\",\"groupby\":[\"lag_days\"],\"temporal_columns_lookup\":{\"request_date\"\
-  :true,\"loaded_at\":true},\"metrics\":[{\"aggregate\":\"COUNT\",\"column\":{\"advanced_data_type\"\
-  :null,\"changed_on\":\"2026-09-02T08:21:44.349272\",\"column_name\":\"request_date\"\
-  ,\"created_on\":\"2026-09-02T08:21:44.244873\",\"description\":null,\"expression\"\
-  :\"\",\"extra\":\"{\\\"warning_markdown\\\":null}\",\"filterable\":true,\"groupby\"\
-  :true,\"id\":27,\"is_active\":true,\"is_dttm\":true,\"python_date_format\":null,\"\
-  type\":\"DATE\",\"type_generic\":2,\"uuid\":\"39798550-2927-424a-a77c-d2144cfe7667\"\
-  ,\"verbose_name\":null},\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\"\
-  ,\"hasCustomLabel\":true,\"label\":\"\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\
-  \u0432\u043E \u0434\u043D\u0435\u0439\",\"optionName\":\"metric_w0irg2tqfck_nzf3ytndxa\"\
-  ,\"sqlExpression\":null}],\"all_columns\":[],\"percent_metrics\":[],\"adhoc_filters\"\
-  :[{\"clause\":\"WHERE\",\"comparator\":\"No filter\",\"expressionType\":\"SIMPLE\"\
-  ,\"operator\":\"TEMPORAL_RANGE\",\"subject\":\"request_date\"}],\"timeseries_limit_metric\"\
+  - 2
+query_context: "{\"datasource\":{\"id\":2,\"type\":\"table\"},\"force\":false,\"queries\"\
+  :[{\"filters\":[{\"col\":\"dt\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"Last month\"\
+  }],\"extras\":{\"having\":\"\",\"where\":\"\"},\"applied_time_extras\":{},\"columns\"\
+  :[\"lag_days\"],\"metrics\":[{\"expressionType\":\"SQL\",\"sqlExpression\":\"COUNT(dt)\"\
+  ,\"column\":null,\"aggregate\":null,\"datasourceWarning\":false,\"hasCustomLabel\"\
+  :true,\"label\":\"\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\
+  \u043D\u0435\u0439\",\"optionName\":\"metric_btu9g05k8t9_ph9ryakrfb\"}],\"orderby\"\
+  :[[{\"aggregate\":\"MIN\",\"column\":{\"advanced_data_type\":null,\"certification_details\"\
+  :null,\"certified_by\":null,\"column_name\":\"lag_days\",\"description\":null,\"\
+  expression\":\"\",\"filterable\":true,\"groupby\":true,\"id\":30,\"is_certified\"\
+  :false,\"is_dttm\":false,\"python_date_format\":null,\"type\":\"INTEGER\",\"type_generic\"\
+  :0,\"verbose_name\":\"\u041B\u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\
+  \u0438, \u0434\u043D\u0435\u0439\",\"warning_markdown\":null},\"datasourceWarning\"\
+  :false,\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"label\":\"MIN(\u041B\
+  \u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438, \u0434\u043D\u0435\
+  \u0439)\",\"optionName\":\"metric_800uecf2exg_0j3ai541tgfn\",\"sqlExpression\":null},true]],\"\
+  annotation_layers\":[],\"row_limit\":1000,\"series_limit\":0,\"series_limit_metric\"\
   :{\"aggregate\":\"MIN\",\"column\":{\"advanced_data_type\":null,\"certification_details\"\
   :null,\"certified_by\":null,\"column_name\":\"lag_days\",\"description\":null,\"\
   expression\":\"\",\"filterable\":true,\"groupby\":true,\"id\":30,\"is_certified\"\
@@ -144,13 +106,35 @@ query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"
   :false,\"expressionType\":\"SIMPLE\",\"hasCustomLabel\":false,\"label\":\"MIN(\u041B\
   \u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438, \u0434\u043D\u0435\
   \u0439)\",\"optionName\":\"metric_800uecf2exg_0j3ai541tgfn\",\"sqlExpression\":null},\"\
-  order_by_cols\":[],\"order_desc\":false,\"row_limit\":1000,\"show_totals\":false,\"\
-  table_timestamp_format\":\"smart_date\",\"allow_render_html\":true,\"show_cell_bars\"\
-  :true,\"color_pn\":true,\"conditional_formatting\":[],\"comparison_type\":\"values\"\
-  ,\"extra_form_data\":{},\"dashboards\":[1],\"force\":false,\"result_format\":\"\
-  json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"full\"\
-  }"
+  order_desc\":false,\"url_params\":{},\"custom_params\":{},\"custom_form_data\":{},\"\
+  post_processing\":[],\"time_offsets\":[]}],\"form_data\":{\"datasource\":\"2__table\"\
+  ,\"viz_type\":\"table\",\"slice_id\":2,\"query_mode\":\"aggregate\",\"groupby\"\
+  :[\"lag_days\"],\"temporal_columns_lookup\":{\"dt\":true,\"loaded_at\":true},\"\
+  metrics\":[{\"expressionType\":\"SQL\",\"sqlExpression\":\"COUNT(dt)\",\"column\"\
+  :null,\"aggregate\":null,\"datasourceWarning\":false,\"hasCustomLabel\":true,\"\
+  label\":\"\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\u043D\
+  \u0435\u0439\",\"optionName\":\"metric_btu9g05k8t9_ph9ryakrfb\"}],\"all_columns\"\
+  :[],\"percent_metrics\":[],\"adhoc_filters\":[{\"expressionType\":\"SIMPLE\",\"\
+  subject\":\"dt\",\"operator\":\"TEMPORAL_RANGE\",\"operatorId\":\"TEMPORAL_RANGE\"\
+  ,\"comparator\":\"Last month\",\"clause\":\"WHERE\",\"sqlExpression\":null,\"isExtra\"\
+  :false,\"isNew\":false,\"datasourceWarning\":false,\"filterOptionName\":\"filter_ijouammfpy_34nzs7bq0k2\"\
+  }],\"timeseries_limit_metric\":{\"aggregate\":\"MIN\",\"column\":{\"advanced_data_type\"\
+  :null,\"certification_details\":null,\"certified_by\":null,\"column_name\":\"lag_days\"\
+  ,\"description\":null,\"expression\":\"\",\"filterable\":true,\"groupby\":true,\"\
+  id\":30,\"is_certified\":false,\"is_dttm\":false,\"python_date_format\":null,\"\
+  type\":\"INTEGER\",\"type_generic\":0,\"verbose_name\":\"\u041B\u0430\u0433 \u0437\
+  \u0430\u0433\u0440\u0443\u0437\u043A\u0438, \u0434\u043D\u0435\u0439\",\"warning_markdown\"\
+  :null},\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\",\"hasCustomLabel\"\
+  :false,\"label\":\"MIN(\u041B\u0430\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\
+  \u0438, \u0434\u043D\u0435\u0439)\",\"optionName\":\"metric_800uecf2exg_0j3ai541tgfn\"\
+  ,\"sqlExpression\":null},\"order_by_cols\":[],\"order_desc\":false,\"row_limit\"\
+  :1000,\"server_page_length\":10,\"show_totals\":false,\"table_timestamp_format\"\
+  :\"smart_date\",\"allow_render_html\":true,\"show_cell_bars\":true,\"color_pn\"\
+  :true,\"comparison_color_scheme\":\"Green\",\"conditional_formatting\":[],\"comparison_type\"\
+  :\"values\",\"extra_form_data\":{},\"dashboards\":[2],\"force\":false,\"result_format\"\
+  :\"json\",\"result_type\":\"full\"},\"result_format\":\"json\",\"result_type\":\"\
+  full\"}"
 cache_timeout: null
-uuid: b794a48d-f252-460b-a571-5b469c20f963
+uuid: 8e98b892-2b69-49b5-bc06-c0cfaa68a0a9
 version: 1.0.0
 dataset_uuid: 29aedddb-8366-4b45-8c98-8cb454bf7c44

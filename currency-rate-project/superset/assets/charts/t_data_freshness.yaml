@@ -1,0 +1,58 @@
+slice_name: "\u0414\u0430\u043D\u043D\u044B\u0435 \u0430\u043A\u0442\u0443\u0430\u043B\
+  \u044C\u043D\u044B \u043D\u0430"
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 2__table
+  viz_type: table
+  slice_id: 9
+  query_mode: aggregate
+  groupby: []
+  temporal_columns_lookup:
+    dt: true
+    loaded_at: true
+  metrics:
+  - aggregate: null
+    column: null
+    datasourceWarning: false
+    expressionType: SQL
+    hasCustomLabel: true
+    label: UTC
+    optionName: metric_3idp67oaw1v_3c68cv1bv3k
+    sqlExpression: NOW()
+  all_columns: []
+  percent_metrics: []
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: dt
+    operator: TEMPORAL_RANGE
+    operatorId: TEMPORAL_RANGE
+    comparator: No filter
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_1bi69dyb90l_x98xcs5q2is
+  order_by_cols: []
+  row_limit: '1'
+  table_timestamp_format: '%d.%m.%Y %H:%M:%S'
+  allow_render_html: true
+  show_cell_bars: false
+  color_pn: false
+  comparison_color_scheme: Green
+  conditional_formatting: []
+  comparison_type: values
+  extra_form_data: {}
+  dashboards:
+  - 2
+query_context: '{"datasource":{"id":2,"type":"table"},"force":false,"queries":[{"filters":[{"col":"dt","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":[],"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"UTC","optionName":"metric_3idp67oaw1v_3c68cv1bv3k","sqlExpression":"NOW()"}],"orderby":[[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"UTC","optionName":"metric_3idp67oaw1v_3c68cv1bv3k","sqlExpression":"NOW()"},false]],"annotation_layers":[],"row_limit":1,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[],"time_offsets":[]}],"form_data":{"datasource":"2__table","viz_type":"table","slice_id":9,"query_mode":"aggregate","groupby":[],"temporal_columns_lookup":{"dt":true,"loaded_at":true},"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"UTC","optionName":"metric_3idp67oaw1v_3c68cv1bv3k","sqlExpression":"NOW()"}],"all_columns":[],"percent_metrics":[],"adhoc_filters":[{"expressionType":"SIMPLE","subject":"dt","operator":"TEMPORAL_RANGE","operatorId":"TEMPORAL_RANGE","comparator":"No
+  filter","clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_1bi69dyb90l_x98xcs5q2is"}],"order_by_cols":[],"row_limit":"1","table_timestamp_format":"%d.%m.%Y
+  %H:%M:%S","allow_render_html":true,"show_cell_bars":false,"color_pn":false,"comparison_color_scheme":"Green","conditional_formatting":[],"comparison_type":"values","extra_form_data":{},"dashboards":[2],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: f7bc134d-b1a1-46a1-a15a-f1d337c4a73c
+version: 1.0.0
+dataset_uuid: 29aedddb-8366-4b45-8c98-8cb454bf7c44
