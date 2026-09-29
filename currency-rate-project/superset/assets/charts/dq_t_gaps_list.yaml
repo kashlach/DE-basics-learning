@@ -1,0 +1,64 @@
+slice_name: "\u041F\u0440\u043E\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435 \u0437\
+  \u0430\u0433\u0440\u0443\u0437\u043A\u0438 NEW"
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 3__table
+  viz_type: table
+  slice_id: 29
+  query_mode: raw
+  groupby: []
+  temporal_columns_lookup:
+    dt: true
+  all_columns:
+  - dt
+  - day_type
+  percent_metrics: []
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: is_missed
+    operator: IN
+    operatorId: IN
+    comparator:
+    - true
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_rqhc6nmokqi_1vzfp7ebb8f
+  - expressionType: SIMPLE
+    subject: dt
+    operator: TEMPORAL_RANGE
+    operatorId: TEMPORAL_RANGE
+    comparator: No filter
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_lw3d3hj4p99_wiig7n8ox6f
+  order_by_cols:
+  - '["dt", false]'
+  row_limit: 1000
+  table_timestamp_format: '%d/%m/%Y'
+  page_length: 0
+  include_search: true
+  allow_render_html: true
+  show_cell_bars: false
+  align_pn: false
+  color_pn: false
+  conditional_formatting: []
+  extra_form_data: {}
+  dashboards:
+  - 3
+query_context: '{"datasource":{"id":3,"type":"table"},"force":false,"queries":[{"filters":[{"col":"is_missed","op":"IN","val":[true]},{"col":"dt","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":["dt","day_type"],"orderby":[["dt",false]],"annotation_layers":[],"row_limit":1000,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[],"time_offsets":[]}],"form_data":{"datasource":"3__table","viz_type":"table","slice_id":29,"query_mode":"raw","groupby":[],"temporal_columns_lookup":{"dt":true},"all_columns":["dt","day_type"],"percent_metrics":[],"adhoc_filters":[{"expressionType":"SIMPLE","subject":"is_missed","operator":"IN","operatorId":"IN","comparator":[true],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_rqhc6nmokqi_1vzfp7ebb8f"},{"expressionType":"SIMPLE","subject":"dt","operator":"TEMPORAL_RANGE","operatorId":"TEMPORAL_RANGE","comparator":"No
+  filter","clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_lw3d3hj4p99_wiig7n8ox6f"}],"order_by_cols":["[\"dt\",
+  false]"],"row_limit":1000,"table_timestamp_format":"%d/%m/%Y","page_length":0,"include_search":true,"allow_render_html":true,"show_cell_bars":false,"align_pn":false,"color_pn":false,"conditional_formatting":[],"extra_form_data":{},"dashboards":[3],"force":false,"result_format":"json","result_type":"full","include_time":false},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: bccc381a-7098-4fa0-a645-853aabb471b9
+version: 1.0.0
+dataset_uuid: 1e720447-c1cd-442e-b9db-1118ef62302b

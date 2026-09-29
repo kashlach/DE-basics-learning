@@ -6,7 +6,7 @@ viz_type: big_number_total
 params:
   datasource: 1__table
   viz_type: big_number_total
-  slice_id: 7
+  slice_id: 26
   metric:
     aggregate: null
     column: null
@@ -39,7 +39,7 @@ params:
     targetValue: 0.1
   extra_form_data: {}
   dashboards:
-  - 2
+  - 3
 query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\"\
   :[{\"filters\":[{\"col\":\"dt\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"\
   }],\"extras\":{\"having\":\"\",\"where\":\"\"},\"applied_time_extras\":{},\"columns\"\
@@ -49,7 +49,7 @@ query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"
   \ dt = CURRENT_DATE \\n   THEN diff \\n   ELSE 0 \\n END\\n) + 0.1)::FLOAT\"}],\"\
   annotation_layers\":[],\"series_limit\":0,\"order_desc\":true,\"url_params\":{},\"\
   custom_params\":{},\"custom_form_data\":{}}],\"form_data\":{\"datasource\":\"1__table\"\
-  ,\"viz_type\":\"big_number_total\",\"slice_id\":7,\"metric\":{\"aggregate\":null,\"\
+  ,\"viz_type\":\"big_number_total\",\"slice_id\":26,\"metric\":{\"aggregate\":null,\"\
   column\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\"\
   :true,\"label\":\"raw_vs_int\",\"optionName\":\"metric_9n6be98dii9_94taq54tvdb\"\
   ,\"sqlExpression\":\"(MAX(\\n CASE \\n   WHEN dt = CURRENT_DATE \\n   THEN diff\
@@ -60,10 +60,10 @@ query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"
   :0.125,\"y_axis_format\":\",d\",\"time_format\":\"smart_date\",\"conditional_formatting\"\
   :[{\"colorScheme\":\"#ACE1C4\",\"column\":\"raw_vs_int\",\"operator\":\"\u2264\"\
   ,\"targetValue\":0.1},{\"colorScheme\":\"#EFA1AA\",\"column\":\"raw_vs_int\",\"\
-  operator\":\">\",\"targetValue\":0.1}],\"extra_form_data\":{},\"dashboards\":[2],\"\
+  operator\":\">\",\"targetValue\":0.1}],\"extra_form_data\":{},\"dashboards\":[3],\"\
   force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\"\
   :\"json\",\"result_type\":\"full\"}"
 cache_timeout: null
-uuid: d8e4248d-3455-4f26-ab55-64d6f9a5dc07
+uuid: 9bc157dd-a2e7-44f6-bcd6-89b8092e3063
 version: 1.0.0
 dataset_uuid: 0ed5a6be-f34b-48b2-9d27-bc4106e25371

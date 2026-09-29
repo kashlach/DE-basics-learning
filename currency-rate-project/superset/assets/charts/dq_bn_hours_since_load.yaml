@@ -1,11 +1,13 @@
 slice_name: "\u0427\u0430\u0441\u043E\u0432 \u0441 \u043F\u043E\u0441\u043B\u0435\u0434\
   \u043D\u0435\u0439 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438"
-description: ''
+description: null
 certified_by: null
 certification_details: null
 viz_type: big_number_total
 params:
+  datasource: 2__table
   viz_type: big_number_total
+  slice_id: 32
   metric:
     aggregate: null
     column: null
@@ -21,29 +23,29 @@ params:
     expressionType: SIMPLE
     operator: TEMPORAL_RANGE
     subject: request_date
+  subheader: '  '
   header_font_size: 0.6
-  subheader_font_size: 0.15
+  subheader_font_size: 0.125
   y_axis_format: SMART_NUMBER
   time_format: smart_date
   conditional_formatting:
-  - column: EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600
-    colorScheme: '#ACE1C4'
+  - colorScheme: '#ACE1C4'
+    column: EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600
     operator: "\u2264"
     targetValue: 24
-  - column: EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600
-    colorScheme: '#FDE380'
-    targetValueLeft: '24'
+  - colorScheme: '#FDE380'
+    column: EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600
     operator: "< x \u2264"
+    targetValueLeft: '24'
     targetValueRight: '35'
-  - column: EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600
-    colorScheme: '#EFA1AA'
+  - colorScheme: '#EFA1AA'
+    column: EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600
     operator: '>'
     targetValue: 35
   extra_form_data: {}
   dashboards:
-  - 1
-  annotation_layers: []
-query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\"\
+  - 3
+query_context: "{\"datasource\":{\"id\":2,\"type\":\"table\"},\"force\":false,\"queries\"\
   :[{\"filters\":[{\"col\":\"request_date\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No\
   \ filter\"}],\"extras\":{\"having\":\"\",\"where\":\"\"},\"applied_time_extras\"\
   :{},\"columns\":[],\"metrics\":[{\"aggregate\":null,\"column\":null,\"datasourceWarning\"\
@@ -51,24 +53,24 @@ query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"
   \ FROM NOW() - MAX(loaded_at)) / 3600\",\"optionName\":\"metric_rcfp55meteh_fmgtjef2x88\"\
   ,\"sqlExpression\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\"}],\"annotation_layers\"\
   :[],\"series_limit\":0,\"order_desc\":true,\"url_params\":{},\"custom_params\":{},\"\
-  custom_form_data\":{}}],\"form_data\":{\"datasource\":\"1__table\",\"viz_type\"\
-  :\"big_number_total\",\"slice_id\":1,\"metric\":{\"aggregate\":null,\"column\":null,\"\
-  datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\":false,\"\
-  label\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\",\"optionName\":\"\
-  metric_rcfp55meteh_fmgtjef2x88\",\"sqlExpression\":\"EXTRACT(EPOCH FROM NOW() -\
-  \ MAX(loaded_at)) / 3600\"},\"adhoc_filters\":[{\"clause\":\"WHERE\",\"comparator\"\
+  custom_form_data\":{}}],\"form_data\":{\"datasource\":\"2__table\",\"viz_type\"\
+  :\"big_number_total\",\"slice_id\":32,\"metric\":{\"aggregate\":null,\"column\"\
+  :null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\"\
+  :false,\"label\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\",\"optionName\"\
+  :\"metric_rcfp55meteh_fmgtjef2x88\",\"sqlExpression\":\"EXTRACT(EPOCH FROM NOW()\
+  \ - MAX(loaded_at)) / 3600\"},\"adhoc_filters\":[{\"clause\":\"WHERE\",\"comparator\"\
   :\"No filter\",\"expressionType\":\"SIMPLE\",\"operator\":\"TEMPORAL_RANGE\",\"\
-  subject\":\"request_date\"}],\"header_font_size\":0.6,\"subheader_font_size\":0.15,\"\
-  y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"conditional_formatting\"\
-  :[{\"column\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\",\"colorScheme\"\
-  :\"#ACE1C4\",\"operator\":\"\u2264\",\"targetValue\":24},{\"column\":\"EXTRACT(EPOCH\
-  \ FROM NOW() - MAX(loaded_at)) / 3600\",\"colorScheme\":\"#FDE380\",\"targetValueLeft\"\
-  :\"24\",\"operator\":\"< x \u2264\",\"targetValueRight\":\"35\"},{\"column\":\"\
-  EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\",\"colorScheme\":\"#EFA1AA\"\
-  ,\"operator\":\">\",\"targetValue\":35}],\"extra_form_data\":{},\"dashboards\":[1],\"\
+  subject\":\"request_date\"}],\"subheader\":\"  \",\"header_font_size\":0.6,\"subheader_font_size\"\
+  :0.125,\"y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"conditional_formatting\"\
+  :[{\"colorScheme\":\"#ACE1C4\",\"column\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at))\
+  \ / 3600\",\"operator\":\"\u2264\",\"targetValue\":24},{\"colorScheme\":\"#FDE380\"\
+  ,\"column\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\",\"operator\":\"\
+  < x \u2264\",\"targetValueLeft\":\"24\",\"targetValueRight\":\"35\"},{\"colorScheme\"\
+  :\"#EFA1AA\",\"column\":\"EXTRACT(EPOCH FROM NOW() - MAX(loaded_at)) / 3600\",\"\
+  operator\":\">\",\"targetValue\":35}],\"extra_form_data\":{},\"dashboards\":[3],\"\
   force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\"\
   :\"json\",\"result_type\":\"full\"}"
 cache_timeout: null
-uuid: 1fb06c09-b3fb-41ea-897f-c1f3e78089da
+uuid: 8556a9ff-3e44-4d1d-ab72-5c1aa1ab1926
 version: 1.0.0
 dataset_uuid: 29aedddb-8366-4b45-8c98-8cb454bf7c44
