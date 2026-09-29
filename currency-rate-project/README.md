@@ -181,7 +181,7 @@ uv run --env-file .env dbt run --project-dir currency_dbt --profiles-dir currenc
 <details>
   <summary>Скриншот отчета</summary>
   <br>
-  <img src="screenshots/svod_excel.PNG">
+  <img src="screenshots/svod_excel.PNG" width="900">
 </details>
 
 ####  Алерт по USD на почту (Airflow)
