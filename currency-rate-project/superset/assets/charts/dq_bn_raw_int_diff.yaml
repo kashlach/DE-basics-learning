@@ -1,0 +1,69 @@
+slice_name: "\u041D\u0435 \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E"
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  datasource: 1__table
+  viz_type: big_number_total
+  slice_id: 26
+  metric:
+    aggregate: null
+    column: null
+    datasourceWarning: false
+    expressionType: SQL
+    hasCustomLabel: true
+    label: raw_vs_int
+    optionName: metric_9n6be98dii9_94taq54tvdb
+    sqlExpression: "(MAX(\n CASE \n   WHEN dt = CURRENT_DATE \n   THEN diff \n   ELSE\
+      \ 0 \n END\n) + 0.1)::FLOAT"
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: dt
+  subheader: "\u0432\u0430\u043B\u044E\u0442 \u0438\u0437 raw-\u0441\u043B\u043E\u044F"
+  header_font_size: 0.6
+  subheader_font_size: 0.125
+  y_axis_format: ',d'
+  time_format: smart_date
+  conditional_formatting:
+  - colorScheme: '#ACE1C4'
+    column: raw_vs_int
+    operator: "\u2264"
+    targetValue: 0.1
+  - colorScheme: '#EFA1AA'
+    column: raw_vs_int
+    operator: '>'
+    targetValue: 0.1
+  extra_form_data: {}
+  dashboards:
+  - 3
+query_context: "{\"datasource\":{\"id\":1,\"type\":\"table\"},\"force\":false,\"queries\"\
+  :[{\"filters\":[{\"col\":\"dt\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"\
+  }],\"extras\":{\"having\":\"\",\"where\":\"\"},\"applied_time_extras\":{},\"columns\"\
+  :[],\"metrics\":[{\"aggregate\":null,\"column\":null,\"datasourceWarning\":false,\"\
+  expressionType\":\"SQL\",\"hasCustomLabel\":true,\"label\":\"raw_vs_int\",\"optionName\"\
+  :\"metric_9n6be98dii9_94taq54tvdb\",\"sqlExpression\":\"(MAX(\\n CASE \\n   WHEN\
+  \ dt = CURRENT_DATE \\n   THEN diff \\n   ELSE 0 \\n END\\n) + 0.1)::FLOAT\"}],\"\
+  annotation_layers\":[],\"series_limit\":0,\"order_desc\":true,\"url_params\":{},\"\
+  custom_params\":{},\"custom_form_data\":{}}],\"form_data\":{\"datasource\":\"1__table\"\
+  ,\"viz_type\":\"big_number_total\",\"slice_id\":26,\"metric\":{\"aggregate\":null,\"\
+  column\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\"\
+  :true,\"label\":\"raw_vs_int\",\"optionName\":\"metric_9n6be98dii9_94taq54tvdb\"\
+  ,\"sqlExpression\":\"(MAX(\\n CASE \\n   WHEN dt = CURRENT_DATE \\n   THEN diff\
+  \ \\n   ELSE 0 \\n END\\n) + 0.1)::FLOAT\"},\"adhoc_filters\":[{\"clause\":\"WHERE\"\
+  ,\"comparator\":\"No filter\",\"expressionType\":\"SIMPLE\",\"operator\":\"TEMPORAL_RANGE\"\
+  ,\"subject\":\"dt\"}],\"subheader\":\"\u0432\u0430\u043B\u044E\u0442 \u0438\u0437\
+  \ raw-\u0441\u043B\u043E\u044F\",\"header_font_size\":0.6,\"subheader_font_size\"\
+  :0.125,\"y_axis_format\":\",d\",\"time_format\":\"smart_date\",\"conditional_formatting\"\
+  :[{\"colorScheme\":\"#ACE1C4\",\"column\":\"raw_vs_int\",\"operator\":\"\u2264\"\
+  ,\"targetValue\":0.1},{\"colorScheme\":\"#EFA1AA\",\"column\":\"raw_vs_int\",\"\
+  operator\":\">\",\"targetValue\":0.1}],\"extra_form_data\":{},\"dashboards\":[3],\"\
+  force\":false,\"result_format\":\"json\",\"result_type\":\"full\"},\"result_format\"\
+  :\"json\",\"result_type\":\"full\"}"
+cache_timeout: null
+uuid: 9bc157dd-a2e7-44f6-bcd6-89b8092e3063
+version: 1.0.0
+dataset_uuid: 0ed5a6be-f34b-48b2-9d27-bc4106e25371

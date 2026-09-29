@@ -1,0 +1,67 @@
+slice_name: "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0437\u0430 \u0434\
+  \u0435\u043D\u044C, %"
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number
+params:
+  datasource: 6__table
+  viz_type: big_number
+  slice_id: 14
+  x_axis: requested_date
+  time_grain_sqla: P1D
+  metric:
+    aggregate: null
+    column: null
+    datasourceWarning: false
+    expressionType: SQL
+    hasCustomLabel: true
+    label: daily_change
+    optionName: metric_955m5z5y8vk_2tzxfxwgjsp
+    sqlExpression: MAX(daily_change_pct)
+  adhoc_filters:
+  - clause: WHERE
+    datasourceWarning: false
+    expressionType: SIMPLE
+    filterOptionName: filter_puy2ifccq7_xyfegpcsien
+    isExtra: false
+    isNew: false
+    operator: IS NOT NULL
+    operatorId: IS_NOT_NULL
+    sqlExpression: null
+    subject: daily_change_pct
+  - clause: WHERE
+    comparator: No filter
+    datasourceWarning: false
+    expressionType: SIMPLE
+    filterOptionName: filter_oyxvrin54g_w1r0g3h9ym8
+    isExtra: true
+    isNew: false
+    operator: TEMPORAL_RANGE
+    sqlExpression: null
+    subject: requested_date
+  show_timestamp: false
+  show_trend_line: true
+  start_y_axis_at_zero: false
+  color_picker:
+    a: 1
+    b: 135
+    g: 122
+    r: 0
+  header_font_size: 0.6
+  subheader_font_size: 0.125
+  y_axis_format: +.2f
+  time_format: smart_date
+  rolling_type: None
+  resample_method: asfreq
+  extra_form_data: {}
+  dashboards:
+  - 2
+query_context: '{"datasource":{"id":6,"type":"table"},"force":false,"queries":[{"filters":[{"col":"daily_change_pct","op":"IS
+  NOT NULL"},{"col":"requested_date","op":"TEMPORAL_RANGE","val":"No filter"}],"extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},"columns":[{"timeGrain":"P1D","columnType":"BASE_AXIS","sqlExpression":"requested_date","label":"requested_date","expressionType":"SQL"}],"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"daily_change","optionName":"metric_955m5z5y8vk_2tzxfxwgjsp","sqlExpression":"MAX(daily_change_pct)"}],"annotation_layers":[],"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[{"operation":"pivot","options":{"index":["requested_date"],"columns":[],"aggregates":{"daily_change":{"operator":"mean"}},"drop_missing_columns":true}},{"operation":"flatten"}]}],"form_data":{"datasource":"6__table","viz_type":"big_number","slice_id":14,"x_axis":"requested_date","time_grain_sqla":"P1D","metric":{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"daily_change","optionName":"metric_955m5z5y8vk_2tzxfxwgjsp","sqlExpression":"MAX(daily_change_pct)"},"adhoc_filters":[{"clause":"WHERE","datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_puy2ifccq7_xyfegpcsien","isExtra":false,"isNew":false,"operator":"IS
+  NOT NULL","operatorId":"IS_NOT_NULL","sqlExpression":null,"subject":"daily_change_pct"},{"clause":"WHERE","comparator":"No
+  filter","datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_oyxvrin54g_w1r0g3h9ym8","isExtra":true,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":null,"subject":"requested_date"}],"show_timestamp":false,"show_trend_line":true,"start_y_axis_at_zero":false,"color_picker":{"a":1,"b":135,"g":122,"r":0},"header_font_size":0.6,"subheader_font_size":0.125,"y_axis_format":"+.2f","time_format":"smart_date","rolling_type":"None","resample_method":"asfreq","extra_form_data":{},"dashboards":[2],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 05a345ab-2b24-4c6f-a7f3-683a8632e1d8
+version: 1.0.0
+dataset_uuid: 6639bbb1-c7df-47c9-b3a9-2daedb4bf5cc

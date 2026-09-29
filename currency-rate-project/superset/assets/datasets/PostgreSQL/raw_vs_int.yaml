@@ -1,0 +1,88 @@
+table_name: raw_vs_int
+main_dttm_col: dt
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+catalog: currency_db
+schema: finance_int
+sql: "SELECT\r\n    COALESCE(r.request_date, i.requested_date) AS dt,\r\n    r.currency_cnt\
+  \ AS raw_cnt,\r\n    i.currency_cnt AS int_cnt,\r\n    COALESCE(r.currency_cnt,0)\
+  \ - COALESCE(i.currency_cnt,0) AS diff\r\nFROM (\r\n    SELECT request_date, (SELECT\
+  \ COUNT(*) FROM jsonb_object_keys(raw_json->'Valute')) AS currency_cnt\r\n    FROM\
+  \ raw.currency_rates_raw\r\n) r\r\nFULL JOIN (\r\n    SELECT requested_date, COUNT(DISTINCT\
+  \ char_code) AS currency_cnt\r\n    FROM finance_int.int_daily_rates\r\n    GROUP\
+  \ BY requested_date\r\n) i ON r.request_date = i.requested_date"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: 0ed5a6be-f34b-48b2-9d27-bc4106e25371
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: raw_cnt
+  verbose_name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0432\
+    \u0430\u043B\u044E\u0442 \u0432 raw"
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: int_cnt
+  verbose_name: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0432\
+    \u0430\u043B\u044E\u0442 \u0432 int"
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: diff
+  verbose_name: "\u0420\u0430\u0437\u043D\u0438\u0446\u0430 \u0432 \u043A\u043E\u043B\
+    \u0438\u0447\u0435\u0441\u0442\u0432\u0435 \u0432\u0430\u043B\u044E\u0442"
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: dt
+  verbose_name: "\u0414\u0430\u0442\u0430"
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+version: 1.0.0
+database_uuid: bbeb1773-e825-4c8a-ab59-4ef520d88164

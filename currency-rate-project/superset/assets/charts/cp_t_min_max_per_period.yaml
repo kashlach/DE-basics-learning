@@ -1,0 +1,50 @@
+slice_name: "Min / Max \u0437\u0430 \u043F\u0435\u0440\u0438\u043E\u0434"
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 7__table
+  viz_type: table
+  slice_id: 15
+  query_mode: raw
+  groupby: []
+  temporal_columns_lookup:
+    requested_date: true
+  all_columns:
+  - rate
+  - requested_date
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: requested_date
+  order_by_cols:
+  - '["rate", true]'
+  row_limit: '2'
+  table_timestamp_format: smart_date
+  allow_render_html: true
+  column_config:
+    rate:
+      d3NumberFormat: .2f
+      showCellBars: false
+    requested_date:
+      d3TimeFormat: '%d/%m/%Y'
+      horizontalAlign: right
+  show_cell_bars: false
+  align_pn: false
+  color_pn: false
+  conditional_formatting: []
+  extra_form_data: {}
+  dashboards:
+  - 2
+query_context: '{"datasource":{"id":7,"type":"table"},"force":false,"queries":[{"filters":[{"col":"requested_date","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":["rate","requested_date"],"orderby":[["rate",true]],"annotation_layers":[],"row_limit":2,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[],"time_offsets":[]}],"form_data":{"datasource":"7__table","viz_type":"table","slice_id":15,"query_mode":"raw","groupby":[],"temporal_columns_lookup":{"requested_date":true},"all_columns":["rate","requested_date"],"percent_metrics":[],"adhoc_filters":[{"clause":"WHERE","comparator":"No
+  filter","expressionType":"SIMPLE","operator":"TEMPORAL_RANGE","subject":"requested_date"}],"order_by_cols":["[\"rate\",
+  true]"],"row_limit":"2","table_timestamp_format":"smart_date","allow_render_html":true,"column_config":{"rate":{"d3NumberFormat":".2f","showCellBars":false},"requested_date":{"d3TimeFormat":"%d/%m/%Y","horizontalAlign":"right"}},"show_cell_bars":false,"align_pn":false,"color_pn":false,"conditional_formatting":[],"extra_form_data":{},"dashboards":[2],"force":false,"result_format":"json","result_type":"full","include_time":false},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 6ef7b890-cac5-4f9b-bb3e-6033eeb08b74
+version: 1.0.0
+dataset_uuid: c3aa89e1-e431-43a0-bd77-0f5d569196db

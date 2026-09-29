@@ -27,7 +27,9 @@ models:
       
 
 vars:
-  grafana_schemas: ['finance_marts', 'finance_int']
+  bi_schemas: ['finance_marts', 'finance_int']
+  bi_roles: ['grafanareader', 'bireader']
+  
 
 on-run-end:
-  - "{% for schema in var('grafana_schemas') %}GRANT SELECT ON ALL TABLES IN SCHEMA {{ schema }} TO grafanareader;{% endfor %}"
+  - "{% for role in var('bi_roles') %}{% for schema in var('bi_schemas') %}GRANT SELECT ON ALL TABLES IN SCHEMA {{ schema }} TO {{ role }};{% endfor %}{% endfor %}"

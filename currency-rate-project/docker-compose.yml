@@ -120,6 +120,45 @@ services:
       - "5050:80"
     restart: unless-stopped
 
+  bi-init:
+    profiles: ["bi"]
+    image: postgres:15
+    container_name: cur_bi_init
+    environment:
+      PGPASSWORD: ${DB_PWD}
+    depends_on: 
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./sql/init_bi.sql:/docker-entrypoint-initdb.d/init_bi.sql
+    command: >
+      bash -c "psql -h postgres -U ${DB_USER} -d ${DB_NAME} -v bi_pwd=${BI_READER_PWD} -f ./docker-entrypoint-initdb.d/init_bi.sql"
+    restart: no
+    
+  superset:
+    profiles: ["bi"]
+    build:
+      context: .
+      dockerfile: Dockerfile.superset
+    container_name: cur_superset
+    environment:
+      PYTHONPATH: /app/pythonpath
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
+      SUPERSET_ADMIN_PWD: ${SUPERSET_ADMIN_PWD}
+      SQLALCHEMY_DATABASE_URI: postgresql://${DB_USER}:${DB_PWD}@postgres/superset
+    volumes:
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py
+      - ./superset/assets:/app/assets:ro
+      - ./superset/bootstrap.sh:/app/bootstrap.sh:ro
+      - superset_home:/app/superset_home
+    entrypoint: /app/bootstrap.sh
+    ports:
+      - "8088:8088"
+    depends_on:
+      bi-init:
+        condition: service_completed_successfully
+
 volumes:
   currency_pgdata:
   grafana_data:
+  superset_home:
