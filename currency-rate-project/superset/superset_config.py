@@ -12,3 +12,5 @@ CACHE_CONFIG = {
     'CACHE_TYPE': 'SimpleCache',
     'CACHE_DEFAULT_TIMEOUT': 300  # время жизни кэша в секундах
 }
+
+FEATURE_FLAGS = {"ENABLE_TEMPLATE_PROCESSING": True}  # для Jinja

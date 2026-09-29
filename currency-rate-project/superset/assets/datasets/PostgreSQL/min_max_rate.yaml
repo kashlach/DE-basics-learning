@@ -1,0 +1,78 @@
+table_name: min_max_rate
+main_dttm_col: requested_date
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+catalog: currency_db
+schema: finance_int
+sql: "{%- set codes  = filter_values('char_code', default='USD', remove_filter=True)\
+  \ -%}\r\n{%- set d_from = \"'\" ~ from_dttm ~ \"'::date\" if from_dttm else \"(CURRENT_DATE\
+  \ - 90)\" -%}\r\n{%- set d_to   = \"'\" ~ to_dttm   ~ \"'::date\" if to_dttm   else\
+  \ \"(CURRENT_DATE + 1)\" -%}\r\n\r\nWITH p AS (\r\n  SELECT requested_date, rate\r\
+  \n  FROM finance_int.int_daily_rates\r\n  WHERE char_code IN {{ codes | where_in\
+  \ }}\r\n    AND requested_date >= {{ d_from }} AND requested_date < {{ d_to }}\r\
+  \n)\r\n\r\n(SELECT '\u041C\u0438\u043D\u0438\u043C\u0443\u043C \u0437\u0430 \u043F\
+  \u0435\u0440\u0438\u043E\u0434' AS metric, rate, requested_date FROM p\r\nORDER\
+  \ BY rate ASC,  requested_date DESC LIMIT 1)\r\nUNION ALL\r\n(SELECT '\u041C\u0430\
+  \u043A\u0441\u0438\u043C\u0443\u043C \u0437\u0430 \u043F\u0435\u0440\u0438\u043E\
+  \u0434', rate, requested_date FROM p\r\nORDER BY rate DESC, requested_date DESC\
+  \ LIMIT 1)"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: c3aa89e1-e431-43a0-bd77-0f5d569196db
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: rate
+  verbose_name: ' '
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: requested_date
+  verbose_name: ' '
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: metric
+  verbose_name: ' '
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+version: 1.0.0
+database_uuid: bbeb1773-e825-4c8a-ab59-4ef520d88164

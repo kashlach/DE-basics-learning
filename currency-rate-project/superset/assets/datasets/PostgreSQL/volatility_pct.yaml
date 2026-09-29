@@ -1,0 +1,109 @@
+table_name: volatility_pct
+main_dttm_col: requested_date
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+catalog: currency_db
+schema: finance_int
+sql: "{%- set d_from = \"'\" ~ from_dttm ~ \"'::date\" if from_dttm else \"(CURRENT_DATE\
+  \ - 90)\" -%}\r\n{%- set d_to   = \"'\" ~ to_dttm   ~ \"'::date\" if to_dttm   else\
+  \ \"(CURRENT_DATE + 1)\" -%}\r\n\r\nSELECT\r\n  char_code,\r\n  MAX(currency_name)\
+  \                      AS currency_name,\r\n  ROUND(stddev_samp(daily_change_pct),\
+  \ 3) AS volatility_pct,\r\n  COUNT(daily_change_pct)                 AS n_obs,\r\
+  \n  MAX(requested_date)                     AS requested_date\r\nFROM finance_int.int_daily_rates\r\
+  \nWHERE daily_change_pct IS NOT NULL\r\n  AND requested_date >= {{ d_from }} AND\
+  \ requested_date < {{ d_to }}\r\n  AND char_code <> 'IRR' --\u0438\u0437-\u0437\u0430\
+  \ \u043E\u043A\u0440\u0443\u0433\u043B\u0435\u043D\u0438\u044F \u0432\u0435\u0437\
+  \u0434\u0435 0.0001 \u0438\u043B\u0438 0.0000\r\nGROUP BY char_code\r\nHAVING COUNT(daily_change_pct)\
+  \ >= 5\r\nORDER BY volatility_pct DESC\r\nLIMIT 10"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: 923fd165-16e2-497a-9f0b-ecc073c0d8e3
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: volatility_pct
+  verbose_name: "\u0412\u043E\u043B\u0430\u0442\u0438\u043B\u044C\u043D\u043E\u0441\
+    \u0442\u044C, %"
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: "\u0418\u0437\u043C\u0435\u043D\u0447\u0438\u0432\u043E\u0441\u0442\
+    \u044C \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438 \u0432\u0430\u043B\
+    \u044E\u0442\u044B \u0437\u0430 \u043F\u0435\u0440\u0438\u043E\u0434 (stddev_samp)"
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: requested_date
+  verbose_name: "\u0414\u0430\u0442\u0430"
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: n_obs
+  verbose_name: "\u0412\u044B\u0431\u043E\u0440\u043A\u0430"
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: char_code
+  verbose_name: "\u041A\u043E\u0434"
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: currency_name
+  verbose_name: "\u0412\u0430\u043B\u044E\u0442\u0430"
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+version: 1.0.0
+database_uuid: bbeb1773-e825-4c8a-ab59-4ef520d88164

@@ -1,0 +1,75 @@
+table_name: period_change_pct
+main_dttm_col: requested_date
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+catalog: currency_db
+schema: null
+sql: "{%- set codes  = filter_values('char_code', default='USD', remove_filter=True)\
+  \ -%}\r\n{%- set d_from = \"'\" ~ from_dttm ~ \"'::date\" if from_dttm else \"(CURRENT_DATE\
+  \ - 90)\" -%}\r\n{%- set d_to   = \"'\" ~ to_dttm   ~ \"'::date\" if to_dttm   else\
+  \ \"(CURRENT_DATE + 1)\" -%}\r\nSELECT DISTINCT\r\n  char_code,\r\n  LAST_VALUE(requested_date)\
+  \ OVER w AS requested_date,\r\n  ROUND((LAST_VALUE(rate) OVER w / NULLIF(FIRST_VALUE(rate)\
+  \ OVER w, 0) - 1) * 100, 2)\r\n    AS period_change_pct\r\nFROM finance_int.int_daily_rates\r\
+  \nWHERE char_code IN {{ codes | where_in }}\r\n  AND requested_date >= {{ d_from\
+  \ }} AND requested_date < {{ d_to }}\r\nWINDOW w AS (\r\n  PARTITION BY char_code\
+  \ ORDER BY requested_date\r\n  ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\r\
+  \n)"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: bf9b2d61-dadb-4be5-b1f5-27c6d998248e
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra: null
+  warning_text: null
+columns:
+- column_name: period_change_pct
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: requested_date
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: char_code
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: bbeb1773-e825-4c8a-ab59-4ef520d88164
